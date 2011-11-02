@@ -36,7 +36,7 @@ public class DinaHelp {
 			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nIllegalAccessException");
 			System.exit(0);
 		}
-		TelaInicial ti = new TelaInicial();
+		InicialGUI ti = new InicialGUI();
 		ti.setVisible(true);
 	}
 }

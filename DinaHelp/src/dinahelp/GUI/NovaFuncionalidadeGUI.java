@@ -1,6 +1,7 @@
 package dinahelp.GUI;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
@@ -8,12 +9,12 @@ import java.io.File;
  * @author Akanbi Strossi de Jesus
  * @author Felipe Bochehin
  */
-public class NovaFuncionalidade extends javax.swing.JFrame implements ActionListener {
+public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionListener {
 
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static final long serialVersionUID = 1L;
 
-	public NovaFuncionalidade() {
+	public NovaFuncionalidadeGUI() {
 		initComponents();
 	}
 
@@ -98,7 +99,7 @@ public class NovaFuncionalidade extends javax.swing.JFrame implements ActionList
 
 			@Override
 			public void run() {
-				new NovaFuncionalidade().setVisible(true);
+				new NovaFuncionalidadeGUI().setVisible(true);
 			}
 		});
 	}
@@ -116,8 +117,8 @@ public class NovaFuncionalidade extends javax.swing.JFrame implements ActionList
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if (COMANDO_ADD.equals(comando)) {
-			TelaInicial.aProjetos.addFilho(jtfNovaFuncNome.getText());
-			File dir = new File(TelaInicial.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
+			InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
+			File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
 			dir.mkdirs();
 			dispose();
 		}

@@ -7,15 +7,15 @@ import javax.swing.JOptionPane;
  * @author Akanbi Strossi de Jesus
  * @author Felipe Bochehin
  */
-public class NovoProjeto extends javax.swing.JFrame {
+public class NovoProjetoGUI extends javax.swing.JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/** Creates new form NovoProjeto */
-	public NovoProjeto() {
+	/** Creates new form NovoProjetoGUI */
+	public NovoProjetoGUI() {
 		initComponents();
 	}
 
@@ -94,7 +94,7 @@ public class NovoProjeto extends javax.swing.JFrame {
 		} else {
 			//			TreePath teste = TelaInicial.jtProjetos.getSelectionPath().add(new DefaultMutableTreeNode(jtfNovoProjNome.getText()));
 			//			TreePath teste = TelaInicial.jtProjetos.getSelectionPath().pathByAddingChild(new DefaultMutableTreeNode(jtfNovoProjNome.getText()));
-			//			TelaInicial.jtProjetos.addSelectionPath(TelaInicial.jtProjetos.getSelectionPath().pathByAddingChild(new DefaultMutableTreeNode(NovoProjeto.jtfNovoProjNome.getText())));
+			//			TelaInicial.jtProjetos.addSelectionPath(TelaInicial.jtProjetos.getSelectionPath().pathByAddingChild(new DefaultMutableTreeNode(NovoProjetoGUI.jtfNovoProjNome.getText())));
 
 			dispose();
 		}
@@ -108,7 +108,7 @@ public class NovoProjeto extends javax.swing.JFrame {
 
 			@Override
 			public void run() {
-				new NovoProjeto().setVisible(true);
+				new NovoProjetoGUI().setVisible(true);
 			}
 		});
 	}

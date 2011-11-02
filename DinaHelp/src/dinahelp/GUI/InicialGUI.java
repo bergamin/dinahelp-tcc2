@@ -1,8 +1,10 @@
 package dinahelp.GUI;
 
-import java.awt.event.*;
-import dinahelp.util.*;
 import com.sun.awt.AWTUtilities;
+import dinahelp.util.Arvore;
+import dinahelp.util.Config;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -10,7 +12,7 @@ import com.sun.awt.AWTUtilities;
  * @author Felipe Bochehin
  */
 @SuppressWarnings("serial")
-public class TelaInicial extends javax.swing.JFrame implements ActionListener {
+public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static String COMANDO_REMOVE = "COMANDO_REMOVE";
@@ -21,8 +23,8 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
 	private static String COMANDO_AUDIO = "COMANDO_AUDIO";
 	public static Config config = new Config("C:\\TESTE"); // Criar um arquivo de configuração e ler.
 
-	/** Creates new form TelaInicial */
-	public TelaInicial() {
+	/** Creates new form InicialGUI */
+	public InicialGUI() {
 		initComponents();
 	}
 
@@ -64,7 +66,7 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
         bTexto.setActionCommand("COMANDO_TEXTO");
         bTexto.addActionListener(this);
 
-        bScreenShot.setText("S");
+        bScreenShot.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/screenshot.png"))); // NOI18N
         bScreenShot.setToolTipText("Abre tela para seleção de área para captura de tela");
         bScreenShot.setActionCommand(COMANDO_SCREENSHOT);
         bScreenShot.addActionListener(this);
@@ -74,12 +76,12 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
         bVideo.setActionCommand(COMANDO_VIDEO);
         bVideo.addActionListener(this);
 
-        bAnimacao.setText("A");
+        bAnimacao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/animacao.png"))); // NOI18N
         bAnimacao.setToolTipText("Abre editor de animação");
         bAnimacao.setActionCommand(COMANDO_ANIMACAO);
         bAnimacao.addActionListener(this);
 
-        bAudio.setText("A");
+        bAudio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/audio.png"))); // NOI18N
         bAudio.setToolTipText("Abre gravador de áudio");
         bAudio.setActionCommand(COMANDO_AUDIO);
         bAudio.addActionListener(this);
@@ -125,7 +127,7 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                    .addComponent(spProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -140,7 +142,7 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lProjetos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
+                        .addComponent(sProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bAddFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -183,7 +185,7 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
 
 	private void miNovoProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNovoProjetoActionPerformed
 		// verificar se o projeto já existe (ver as pastas já criadas)
-		NovoProjeto np = new NovoProjeto();
+		NovoProjetoGUI np = new NovoProjetoGUI();
 		np.setVisible(true);
 		//	TreePath teste = jtProjetos.getSelectionPath().pathByAddingChild(new DefaultMutableTreeNode(np.jtfNovoProjNome.getText()));
 		//	jtProjetos.add(np.jtfNovoProjNome, new DefaultMutableTreeNode("Teste"));
@@ -198,7 +200,7 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
 
 			@Override
 			public void run() {
-				new TelaInicial().setVisible(true);
+				new InicialGUI().setVisible(true);
 			}
 		});
 	}
@@ -227,20 +229,21 @@ public class TelaInicial extends javax.swing.JFrame implements ActionListener {
 		String comando = e.getActionCommand();
 
 		if (COMANDO_ADD.equals(comando)) {
-			NovaFuncionalidade nf = new NovaFuncionalidade();
+			NovaFuncionalidadeGUI nf = new NovaFuncionalidadeGUI();
 			nf.setVisible(true);
 		} else if (COMANDO_REMOVE.equals(comando)) {
 			aProjetos.removeNodo();
 		} else if (COMANDO_TEXTO.equals(comando)) {
-			TelaAjudaTextual tat = new TelaAjudaTextual();
+			AjudaTextualGUI tat = new AjudaTextualGUI();
 			tat.setVisible(true);
 		} else if (COMANDO_SCREENSHOT.equals(comando)) {
-			TelaSelCaptura tsc = new TelaSelCaptura();
+			CapturaTelaGUI tsc = new CapturaTelaGUI('I');
 			tsc.setExtendedState(MAXIMIZED_BOTH);
 			AWTUtilities.setWindowOpacity(tsc, 0.5f);
 			tsc.setVisible(true);
 		} else if (COMANDO_VIDEO.equals(comando)) {
-			// TODO vídeo
+			VideoGUI gv = new VideoGUI();
+			gv.setVisible(true);
 		} else if (COMANDO_ANIMACAO.equals(comando)) {
 			// TODO animação
 		} else if (COMANDO_AUDIO.equals(comando)) {

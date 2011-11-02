@@ -57,7 +57,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="spProjetos" alignment="0" pref="248" max="32767" attributes="0"/>
+                  <Component id="spProjetos" alignment="0" pref="250" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="bTexto" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -73,7 +73,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="lProjetos" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sProjetos" pref="204" max="32767" attributes="0"/>
+                      <Component id="sProjetos" pref="206" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="bAddFunc" min="-2" pref="51" max="-2" attributes="0"/>
@@ -145,7 +145,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="bScreenShot">
       <Properties>
-        <Property name="text" type="java.lang.String" value="S"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/dinahelp/util/imagens/screenshot.png"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" value="Abre tela para sele&#xe7;&#xe3;o de &#xe1;rea para captura de tela"/>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="COMANDO_SCREENSHOT" type="code"/>
@@ -171,7 +173,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="bAnimacao">
       <Properties>
-        <Property name="text" type="java.lang.String" value="A"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/dinahelp/util/imagens/animacao.png"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" value="Abre editor de anima&#xe7;&#xe3;o"/>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="COMANDO_ANIMACAO" type="code"/>
@@ -183,7 +187,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="bAudio">
       <Properties>
-        <Property name="text" type="java.lang.String" value="A"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/dinahelp/util/imagens/audio.png"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" value="Abre gravador de &#xe1;udio"/>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="COMANDO_AUDIO" type="code"/>

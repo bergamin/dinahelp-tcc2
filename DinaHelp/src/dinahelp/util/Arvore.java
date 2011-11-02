@@ -1,11 +1,18 @@
 package dinahelp.util;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
 
-import dinahelp.GUI.TelaInicial;
+import dinahelp.GUI.InicialGUI;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import javax.swing.JPanel;
+import javax.swing.JTree;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -90,7 +97,7 @@ public class Arvore extends JPanel {
 		retorno = removeChar(retorno, '[');
 		retorno = removeChar(retorno, ']');
 		retorno = retorno.replace("\\ ", "\\");
-		return TelaInicial.config.getWorkspace() + "\\" + retorno;
+		return InicialGUI.config.getWorkspace() + "\\" + retorno;
 	}
 
 	public static String removeChar(String s, char c) {

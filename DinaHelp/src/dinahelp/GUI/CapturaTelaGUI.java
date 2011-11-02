@@ -1,10 +1,12 @@
 package dinahelp.GUI;
 
-import dinahelp.negocio.CapturaTelaBusiness;
+import dinahelp.negocio.CapturaTelaNegocio;
 import dinahelp.pojo.CapturaTela;
 import com.sun.awt.AWTUtilities;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Date;
 
 /**
@@ -12,14 +14,15 @@ import java.util.Date;
  * @author Akanbi Strossi de Jesus
  * @author Felipe Bochehin
  */
-public class TelaSelCaptura extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
+public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
 
 	private CapturaTela ct = new CapturaTela();
+	private char tipo;
 
-	/** Creates new form TelaSelCaptura */
+	/** Creates new form CapturaTelaGUI */
 	@SuppressWarnings("LeakingThisInConstructor")
-	public TelaSelCaptura() {
-
+	public CapturaTelaGUI(char tipo) {
+		this.tipo = tipo;
 		initComponents();
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -56,13 +59,13 @@ public class TelaSelCaptura extends javax.swing.JFrame implements MouseListener,
 	 */
 	public static void main(String args[]) {
 
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new TelaSelCaptura().setVisible(true);
-			}
-		});
+//		java.awt.EventQueue.invokeLater(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				new CapturaTelaGUI().setVisible(true);
+//			}
+//		});
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
@@ -81,10 +84,28 @@ public class TelaSelCaptura extends javax.swing.JFrame implements MouseListener,
 		ct.setY2(e.getY());
 		ct.setXTela2(e.getXOnScreen());
 		ct.setYTela2(e.getYOnScreen());
-		AWTUtilities.setWindowOpacity(this, 0.0f);
-		Date d = new Date();
-		long l = d.getTime();
-		new CapturaTelaBusiness().captura(TelaInicial.aProjetos.getCaminho() + "\\" + l + ".png", ct.getXTela1(), ct.getYTela1(), ct.getLargura(), ct.getAltura());
+		
+		if(ct.getLargura() < 0){
+			ct.setLargura(Math.abs(ct.getLargura()));
+			ct.setXTela1(ct.getXTela1() - ct.getLargura());
+			ct.setXTela2(ct.getXTela2() + ct.getLargura());
+		}
+		if(ct.getAltura() < 0){
+			ct.setAltura(Math.abs(ct.getAltura()));
+			ct.setYTela1(ct.getYTela1() - ct.getAltura());
+			ct.setYTela2(ct.getYTela2() + ct.getAltura());
+		}
+		if(tipo == 'I'){
+			AWTUtilities.setWindowOpacity(this, 0.0f);
+			Date d = new Date();
+			long l = d.getTime();
+			new CapturaTelaNegocio().captura(InicialGUI.aProjetos.getCaminho() + "\\" + l + ".png", ct.getXTela1(), ct.getYTela1(), ct.getLargura(), ct.getAltura());
+		}else{ // tipo == 'V';
+			VideoGUI.x = ct.getXTela1();
+			VideoGUI.y = ct.getYTela1();
+			VideoGUI.largura = ct.getLargura();
+			VideoGUI.altura = ct.getAltura();
+		}
 		dispose();
 	}
 
@@ -100,12 +121,12 @@ public class TelaSelCaptura extends javax.swing.JFrame implements MouseListener,
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); // Limpa a tela
-
+		
 		ct.setLargura(ct.getX1() - ct.getX());
 		ct.setAltura(ct.getY1() - ct.getY());
 		ct.setLargura(ct.getLargura() * -1);
 		ct.setAltura(ct.getAltura() * -1);
-
+		
 		g.drawRect(ct.getX1(), ct.getY1(), ct.getLargura(), ct.getAltura());
 	}
 
