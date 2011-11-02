@@ -33,7 +33,7 @@ import dinahelp.util.JpegParaMov;
  *  have no logical place in the present class still remain here. <BR><BR>
  * 
  *  After recording is finished, a DataList object is used to feed a
- *  JpegImagesToMoviesMod object with the images, creating a movie
+ *  JpegImagesToMoviesMod object with the imagens, creating a movie
  *  file. After a movie file has been created, a Merge object is
  *  used to add audio to the movie. <BR><BR>
  *
@@ -48,26 +48,26 @@ import dinahelp.util.JpegParaMov;
 public class VideoNegocio extends Thread {
     
     /** The capture area for video recording. */
-    public Rectangle capRect;
+    public Rectangle retangulo;
     /** The video encoding quality. The value of this parameter will be
      *  overwritten from Run_KRUT.checkInited(), so changing the initial
      *  value of this parameter will have no effect.
      */
     public float encQuality = 0.75f;
-    /** This value represents the limit for when the capRect should move
+    /** This value represents the limit for when the retangulo should move
      *  to be re-centered around the mouse pointer, if we are tracking
      *  the mouse pointer. A comparing value is calculated, and if this 
-     *  comparing value is larger than the moveLimit value, the capRect
+     *  comparing value is larger than the moveLimit value, the retangulo
      *  is re-centered. The comparing value is calculated as follows:<BR><BR>
      *  
-     *  d1 =    The distance from the capRect center to the mousepointer.<BR>
-     *  d2 =    The distance from the capRect center to the bounding edge of the
-     *          capRect, measured along the line through the mousepointer.<BR><BR>
+     *  d1 =    The distance from the retangulo center to the mousepointer.<BR>
+     *  d2 =    The distance from the retangulo center to the bounding edge of the
+     *          retangulo, measured along the line through the mousepointer.<BR><BR>
      *
      *  moveLimit = d1 / d2
      */
     public double moveLimit = 1.0;
-    /** This value represents the acceleration of the capRect when
+    /** This value represents the acceleration of the retangulo when
      *  we are tracking the mouse pointer. The value is used both for
      *  acceleration and retardation.
      *
@@ -238,37 +238,37 @@ public class VideoNegocio extends Thread {
     /**	Used to get the fps value for method startDumper.
      *	Also used to calculate time in method setFps. */
     private int fps;
-    /**	The average size of captured and encoded images.
+    /**	The average size of captured and encoded imagens.
      *	Used to get an estimate of the number of frames
      *	that can be stored in memory. */
     private double avgSize = Double.MAX_VALUE;
     /**	The Encoder, used to
-     *	encode captured images. */
+     *	encode captured imagens. */
     private JPEGImageEncoder encoder;
     /**	The Encoder parameters, used to
-     *	encode captured images. */
+     *	encode captured imagens. */
     private JPEGEncodeParam param;
-    /** This object is used to reload the images
+    /** This object is used to reload the imagens
      *  from the file they are saved in, and then
      *  supply them to the JpegImagesToMovieMod class.
-     *  A new images object is created and set up
+     *  A new imagens object is created and set up
      *  at the end of the main recording thread
      *  (in the run() method). When the encode() method
      *  is called by the user, it takes this object and
      *  passes it on to the startDumper() method.
      */
-    protected ListaDeDados images;
+    private ListaDeDados imagens;
     
     /** This is the screensize of the default screen.
      *  If another screen would be used, this parameter would need
      *  to be updated.
      */
     protected Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    /** The speed with which the capRect is currently moving, if we are
+    /** The speed with which the retangulo is currently moving, if we are
      *  tracking the mouse position.
      */
     private int moveSpeed = 0;
-    /** The direction in which the capRect is currently moving, if we are
+    /** The direction in which the retangulo is currently moving, if we are
      *  tracking the mouse position. The only reason this object is global
      *  is to always have access to the Direction.normalize() method. This
      *  object is used in capRectMover.
@@ -280,7 +280,7 @@ public class VideoNegocio extends Thread {
      *  double values. The class also has a method for normalizing a direction
      *  represented by two integer components.
      *
-     *  This class is used to move the capRect in the capRectMover() and
+     *  This class is used to move the retangulo in the capRectMover() and
      *  getDirectionEdgeIntersection() methods.
      */
     private class Direction {
@@ -325,14 +325,14 @@ public class VideoNegocio extends Thread {
      *
      *  @param  capSize The initial capture area of the VideoNegocio.
      *                  This can later be changed by changing the public
-     *                  parameter capRect, and then calling the init method
+     *                  parameter retangulo, and then calling the init method
      *                  of this class.
      *  @param  fps     The initial fps of the VideoNegocio. This can
      *                  later be changed by calling the setFps method of this
      *                  class.
      */
     public VideoNegocio(Rectangle capSize, int fps) {
-        capRect = capSize;
+        retangulo = capSize;
         setFps(fps, fps);
         try {
             // Start the robot, and perform a
@@ -397,7 +397,7 @@ public class VideoNegocio extends Thread {
                     myRuntime.totalMemory() + myRuntime.freeMemory()) * 0.5d);
         }
         System.out.println("Memory attempt 2: " + convert);
-        /** Set up a save file for encoded jpg images.
+        /** Set up a save file for encoded jpg imagens.
          *  This file is then used directly as output.
          */
         dumpFile = new File("dumpFile" + cntMovies);
@@ -438,7 +438,7 @@ public class VideoNegocio extends Thread {
         System.out.println("Memory after filebuffer: " +
                 (myRuntime.maxMemory() - myRuntime.totalMemory() + 
                 myRuntime.freeMemory()));
-        /** Init the encoder to store encoded images directly to memory.
+        /** Init the encoder to store encoded imagens directly to memory.
          *  This will be changed later, but is an easy way of getting a
          *  first frame for the film, since that frame is to be kept in
          *  memory anyway  (see below).
@@ -446,7 +446,7 @@ public class VideoNegocio extends Thread {
          *  First we take an "average (=random)" image for the method
          *  encoder.getDefaultJPEGEncodeParam(image) below.
          */
-        image = robot.createScreenCapture(capRect);
+        image = robot.createScreenCapture(retangulo);
         /** Set the encoder to the OutputStream that stores in memory. */
         encoder = JPEGCodec.createJPEGEncoder(jpgBytesII);
         /** Get an "average" JPEGEncodeParam */
@@ -472,7 +472,7 @@ public class VideoNegocio extends Thread {
          *
          *  First we take another "average" screenshot.
          */
-        image = robot.createScreenCapture(capRect);
+        image = robot.createScreenCapture(retangulo);
         /** Set the encoder to the FileOutputStream */        
         encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
         /** Get an "average" JPEGEncodeParam */
@@ -488,7 +488,7 @@ public class VideoNegocio extends Thread {
          */
         jpgBytes.write(lastFrame, 0, lastFrame.length);
         /** Allocate int Arrays for storing image sizes,
-         *  and missed images. Setup remaining variables.
+         *  and missed imagens. Setup remaining variables.
          */
         System.out.println("arrays should use (in total): " +
                     (maxNOPics * 8));
@@ -582,16 +582,16 @@ public class VideoNegocio extends Thread {
      */
     private Polygon createMouse(Point mousePos) {
         Polygon polly = new Polygon();
-        polly.addPoint(mousePos.x - capRect.x, mousePos.y - capRect.y);
-        polly.addPoint(mousePos.x - capRect.x, mousePos.y  - capRect.y + 17);
-        polly.addPoint(mousePos.x - capRect.x + 5, mousePos.y  - capRect.y + 12);
-        polly.addPoint(mousePos.x - capRect.x + 12, mousePos.y  - capRect.y + 12);
+        polly.addPoint(mousePos.x - retangulo.x, mousePos.y - retangulo.y);
+        polly.addPoint(mousePos.x - retangulo.x, mousePos.y  - retangulo.y + 17);
+        polly.addPoint(mousePos.x - retangulo.x + 5, mousePos.y  - retangulo.y + 12);
+        polly.addPoint(mousePos.x - retangulo.x + 12, mousePos.y  - retangulo.y + 12);
         
         /** This is the old mousepointer */
-        // polly.addPoint(mousePos.x - capRect.x, mousePos.y - capRect.y);
-        // polly.addPoint(mousePos.x - capRect.x + 15, mousePos.y  - capRect.y + 7);
-        // polly.addPoint(mousePos.x - capRect.x + 9, mousePos.y  - capRect.y + 9);
-        // polly.addPoint(mousePos.x - capRect.x + 7, mousePos.y  - capRect.y + 15);
+        // polly.addPoint(mousePos.x - retangulo.x, mousePos.y - retangulo.y);
+        // polly.addPoint(mousePos.x - retangulo.x + 15, mousePos.y  - retangulo.y + 7);
+        // polly.addPoint(mousePos.x - retangulo.x + 9, mousePos.y  - retangulo.y + 9);
+        // polly.addPoint(mousePos.x - retangulo.x + 7, mousePos.y  - retangulo.y + 15);
         return polly;
     }
         
@@ -601,8 +601,8 @@ public class VideoNegocio extends Thread {
      *
      *  The position returned by this method is used by the
      *  capRectMover() method to check if the distance between
-     *  the mouse pointer and the center of the capRect is big enough
-     *  to start moving the capRect.
+     *  the mouse pointer and the center of the retangulo is big enough
+     *  to start moving the retangulo.
      *
      *  @param  rect    A Rectangle.
      *  @param  dir     A Direction object representing the direction
@@ -696,7 +696,7 @@ public class VideoNegocio extends Thread {
         return new Point(xIntersection, yIntersection);
     }
     
-    /** This method handles the movement of the capRect. If we're
+    /** This method handles the movement of the retangulo. If we're
      *  tracking the mouse pointer, this method is called from the
      *  run() method once every time a frame is recorded.
      *
@@ -708,17 +708,17 @@ public class VideoNegocio extends Thread {
      */
     private void capRectMover(Point realMousePos) {
         /** Used to measure the distance between the center of the
-         *  capRect, and the mouse pointer.
+         *  retangulo, and the mouse pointer.
          */
         int distance;
                 
-        /** Figure out where the capRect would be positioned if it
+        /** Figure out where the retangulo would be positioned if it
          *  was centered around the mouse pointer.
          */ 
-        Point moveTarget = new Point(realMousePos.x - capRect.width / 2,
-                                        realMousePos.y - capRect.height / 2);
+        Point moveTarget = new Point(realMousePos.x - retangulo.width / 2,
+                                        realMousePos.y - retangulo.height / 2);
                         
-        /** Are we in the process of moving the capRect right now? */
+        /** Are we in the process of moving the retangulo right now? */
         if (moveSpeed != 0) {    
             /** We're moving. */
                         
@@ -726,32 +726,32 @@ public class VideoNegocio extends Thread {
             if (moveTarget.x < 0) {
                 moveTarget.x = 0;
             }
-            if (screenSize.width < capRect.width + moveTarget.x) {
-                moveTarget.x = screenSize.width - capRect.width;
+            if (screenSize.width < retangulo.width + moveTarget.x) {
+                moveTarget.x = screenSize.width - retangulo.width;
             }
             if (moveTarget.y < 0) {
                 moveTarget.y = 0;
             }
-            if (screenSize.height < capRect.height + moveTarget.y) {
-                moveTarget.y = screenSize.height - capRect.height;
+            if (screenSize.height < retangulo.height + moveTarget.y) {
+                moveTarget.y = screenSize.height - retangulo.height;
             }
 
             /** Figure out how far we have to move before we reach our target. */
-            distance = (int) moveTarget.distance(capRect.getLocation());
+            distance = (int) moveTarget.distance(retangulo.getLocation());
             
             /** Figure out in which direction we are moving. */
-            moveDir = moveDir.normalize(moveTarget.x - capRect.x,
-                                        moveTarget.y - capRect.y);
+            moveDir = moveDir.normalize(moveTarget.x - retangulo.x,
+                                        moveTarget.y - retangulo.y);
 
             /** Check if we should stop moving */
             if ((moveSpeed <= 0) || (distance <= moveSpeed)) {
                 /** Stop moving. */
                 moveSpeed = 0;
                 distance = 0;
-                capRect.setLocation(moveTarget);
+                retangulo.setLocation(moveTarget);
             } else {
                 /** Move to the new position */
-                capRect.translate((int) (moveDir.x * moveSpeed),
+                retangulo.translate((int) (moveDir.x * moveSpeed),
                                     (int) (moveDir.y * moveSpeed));
                 /** Change the speed of the movement based on how close
                  *  we are to our target.
@@ -764,25 +764,25 @@ public class VideoNegocio extends Thread {
             }
         }
         
-        /** Is the capRect stationary right now? */
+        /** Is the retangulo stationary right now? */
         if (moveSpeed == 0) {
-            /** The capRect is not moving. */
+            /** The retangulo is not moving. */
             
             /** Check the distance between the mouse pointer and the center
-             *  of the capRect.
+             *  of the retangulo.
              */
-            distance = (int) moveTarget.distance(capRect.getLocation());
+            distance = (int) moveTarget.distance(retangulo.getLocation());
             
-            /** Figure out the direction from the center of the capRect to
+            /** Figure out the direction from the center of the retangulo to
              *  the mouse pointer.
              */
-            moveDir = moveDir.normalize(moveTarget.x - capRect.x,
-                                        moveTarget.y - capRect.y);
+            moveDir = moveDir.normalize(moveTarget.x - retangulo.x,
+                                        moveTarget.y - retangulo.y);
             
             /** Check if we should start moving. */
             double compDistance = 
-                    getDirectionEdgeIntersection(capRect, moveDir).distance(
-                    capRect.getCenterX(), capRect.getCenterY());
+                    getDirectionEdgeIntersection(retangulo, moveDir).distance(
+                    retangulo.getCenterX(), retangulo.getCenterY());
             double compValue = distance / compDistance;
             if (moveLimit < compValue) {
                 
@@ -823,7 +823,7 @@ public class VideoNegocio extends Thread {
             for (int cnt = 0; cnt < iterations ; cnt++) {
                 syncTime = System.currentTimeMillis();
                 // image is a class BufferedImage.
-                image = robot.createScreenCapture(capRect);
+                image = robot.createScreenCapture(retangulo);
                 avgTime = System.currentTimeMillis() - syncTime + avgTime;
             }
             avgTime /= iterations;
@@ -857,7 +857,7 @@ public class VideoNegocio extends Thread {
         try {
             //	Capture one image in case there is none
             //	in memory. image is a class BufferedImage.
-            image = robot.createScreenCapture(capRect);
+            image = robot.createScreenCapture(retangulo);
             //	Initialize a new JPEGEncoder for local jpgBytes
             encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
             param = encoder.getDefaultJPEGEncodeParam(image);
@@ -865,7 +865,7 @@ public class VideoNegocio extends Thread {
             encoder.setJPEGEncodeParam(param);
             // Encode one image to get a very rough
             // estimate of the average size
-            // capRect is set in the constructor.
+            // retangulo is set in the constructor.
             // image is a class BufferedImage.
             encoder.encode(image);
             avgSize = jpgBytes.size();
@@ -912,7 +912,7 @@ public class VideoNegocio extends Thread {
         try {
             FileOutputStream outFile = new FileOutputStream(screenshotFile);
             // image is a BufferedImage.
-            image = robot.createScreenCapture(capRect);
+            image = robot.createScreenCapture(retangulo);
             JPEGImageEncoder snapEncoder = JPEGCodec.createJPEGEncoder(outFile);
             snapEncoder.setJPEGEncodeParam(param);
             snapEncoder.encode(image);
@@ -926,13 +926,13 @@ public class VideoNegocio extends Thread {
     }
   
     /**	Starts a new JpegImagesToMovie, and waits for it to finish
-     * making a mov file of the jpg images.
+     * making a mov file of the jpg imagens.
      *
-     *  @param  images  A DataList object that is set-up to read images from
+     *  @param  imagens  A DataList object that is set-up to read imagens from
      *                  the temp-file containing a recently recorded
      *                  movie.
      */
-    private void startDumper(ListaDeDados images) {
+    public void startDumper(ListaDeDados imagens) {
         // Create a new tempfile filename for each movie.
         try {
             File testFile = new File(tempFile);
@@ -941,14 +941,12 @@ public class VideoNegocio extends Thread {
 //            }
 
             String tempTotal = testFile.getPath();
-            String arguments[] = { "-w", Integer.toString(capRect.width),
-                    "-h", Integer.toString(capRect.height),
-                    "-f", Integer.toString(fps), "-o", tempTotal};
+            String arguments[] = { "-w", Integer.toString(retangulo.width), "-h", Integer.toString(retangulo.height),  "-f", Integer.toString(fps), "-o", tempTotal};
 
             // Create a new dumper.
             JpegParaMov dumper = new JpegParaMov(arguments);
             // Point dumper to datasource.
-            dumper.setListaDeDados(images);
+            dumper.setListaDeDados(imagens);
             // Run dumper, and wait for it to finish with waitFor().
             dumper.setPriority(Thread.NORM_PRIORITY);
             dumper.setAcabou(false);
@@ -987,7 +985,7 @@ public class VideoNegocio extends Thread {
         }
     }
     
-    /** Called by the user to start capturing images.
+    /** Called by the user to start capturing imagens.
      *
      * Also wakes up users waiting for the grabber to finish.
      * This method is called once when the last frame is captured,
@@ -1054,7 +1052,7 @@ public class VideoNegocio extends Thread {
                 /** 2 Flags that are readable by the user. */
                 recording = true;
                 running = true;
-                /** Change the acceleration of the capRect in case we are
+                /** Change the acceleration of the retangulo in case we are
                  *  tracking the mouse pointer.
                  */
                 acceleration = 75 / fps;
@@ -1064,13 +1062,13 @@ public class VideoNegocio extends Thread {
                     /** Get location of mouse. */
                     mousePos = MouseInfo.getPointerInfo().getLocation();
                     /** If we are tracking the mouse we should update
-                     *  the position of the capRect.
+                     *  the position of the retangulo.
                      */
                     if (followMouse) {
                         capRectMover(mousePos);
                     }
                     /** This is where we capture the image. */
-                    image = robot.createScreenCapture(capRect);
+                    image = robot.createScreenCapture(retangulo);
                     /** Add mouse cursor to image.  */
                     if (getMouse) {
                         /** Get graphics to paint in. */
@@ -1153,14 +1151,14 @@ public class VideoNegocio extends Thread {
                      *  We create a new DataList object for this movie.
                      *  The DataList object acts as an input source
                      *  for the JpegImagesToMovieMod class.
-                     *  The DataList object, images, is global, so
+                     *  The DataList object, imagens, is global, so
                      *  that the encode() method has access to it as well.
                      */
-                    images = new ListaDeDados();
-                    images.totImg = cntPics;
-                    images.tamanhoImagens = sizes;
-                    images.framesPerdidos = missedFrames;
-                    images.setArquivo(dumpFile);
+                    imagens = new ListaDeDados();
+                    imagens.totImg = cntPics;
+                    imagens.tamanhoImagens = sizes;
+                    imagens.framesPerdidos = missedFrames;
+                    imagens.setArquivo(dumpFile);
                     recording = false;
                     /** wake up users waiting to sync audio. */
                     wakeUp();
@@ -1199,9 +1197,9 @@ public class VideoNegocio extends Thread {
          *  to the DataList, so it can stop encoding if 
          *  the user requests it.
          */
-//        myProgressBar.myDataList = images;
+//        myProgressBar.myDataList = imagens;
         /** Start encoding. */
-        startDumper(images);
+        startDumper(imagens);
         /** We return here when we are done encoding,
          *  or when the encoding has been interrupted.
          *  Now we can set the running flag, to tell
@@ -1213,15 +1211,15 @@ public class VideoNegocio extends Thread {
          *  data source for the movie (the old dumpfile).
          */
         try {
-            images.fis.close();
-            images.arquivo.delete();
+            imagens.fis.close();
+            imagens.arquivo.delete();
         } catch (Exception e) {
             System.out.println(e);
         }
         /** Free some memory from the arrays, and then init
          *  again to be able to use it */
-        images.tamanhoImagens = null;
-        images.framesPerdidos = null;
+        imagens.tamanhoImagens = null;
+        imagens.framesPerdidos = null;
         try {
             initing = true;
             if (!recording) init();

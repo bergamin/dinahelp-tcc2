@@ -39,14 +39,17 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 	private boolean gravaAudio = false;
 	private boolean parando = false;
 	private Rectangle retangulo = new Rectangle(0, 0, 360, 240);
-	private int fps = 15;
+	private int fps = 50;
 	private int frequencia = 22050;
 	
 	/** Creates new form VideoGUI */
 	public VideoGUI() {
 		x = y = largura = altura = 0;
-		audio = new AudioNegocio();
-		video = new VideoNegocio();
+		
+//		audio = new AudioNegocio();
+//		video = new VideoNegocio(retangulo, fps);
+		criaAudio();
+		criaVideo();
 		initComponents();
 	}
 
@@ -173,9 +176,16 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 			else
 				bArea.setEnabled(true);
 		} else if (COMANDO_GRAVA.equals(comando)) {
+			
 			if(!cbTelaInteira.isSelected() && x == 0 && y == 0 && largura == 0 && altura == 0)
 				JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
 			else{
+				if(cbTelaInteira.isSelected()){
+					x = y = 0;
+					largura = Toolkit.getDefaultToolkit().getScreenSize().width;
+					altura = Toolkit.getDefaultToolkit().getScreenSize().height;
+				}
+				retangulo.setBounds(x, y, largura, altura);
 				// Iniciar gravação sincronizada
 				long tempoSinc = System.currentTimeMillis();
 				audio.setSyncTime(tempoSinc);
@@ -237,7 +247,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
                 // Juntar áudio e vídeo
                 try {
                     String arquivoAudio = "";
-					String caminhoVideo = "c:\\teste\\projetos\\video.mov"; // Ver o caminho de gravação do áudio/vídeo
+					String caminhoVideo = "c:\\teste\\projetos"; // Ver o caminho de gravação do áudio/vídeo
                     arquivoAudio = audio.audioFile.toURL().toString(); // Ver o caminho de gravação do áudio/vídeo
                     String argumentosMerge[] = {"-o", caminhoVideo, video.tempFile, arquivoAudio};
                     
@@ -288,16 +298,10 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
         /** Make the ScreenGrabber. It will start as a seperate
          *  thread, with highest priority. The constructor to
          *  ScreenGrabber will just perform a speed test, and
-         *  then it's done. Both capRect and startFps are 
+         *  then it's done. Both retangulo and startFps are 
          *  global parameters that are already initiated.
          */
-		if(cbTelaInteira.isSelected()){
-		//	retangulo.setBounds(x, y, WIDTH, WIDTH);
-			x = y = 0;
-			largura = Toolkit.getDefaultToolkit().getScreenSize().width;
-			altura = Toolkit.getDefaultToolkit().getScreenSize().height;
-		}
-		retangulo.setBounds(x, y, largura, altura);
+		
         video = new VideoNegocio(retangulo, fps);
         video.setPriority(Thread.MAX_PRIORITY);
         /** Starts the ScreenGrabber thread. This thread will

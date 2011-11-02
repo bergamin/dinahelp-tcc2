@@ -190,7 +190,9 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 	}
 
 	public JpegParaMov(String args[]) {
-
+		
+		imagens = new ListaDeDados();
+		
 		if (args.length == 0) {
 			prUsage();
 		}
