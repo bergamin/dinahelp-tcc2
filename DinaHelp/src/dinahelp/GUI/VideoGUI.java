@@ -11,6 +11,11 @@
 package dinahelp.GUI;
 
 import com.sun.awt.AWTUtilities;
+import dinahelp.negocio.AudioNegocio;
+import dinahelp.negocio.VideoNegocio;
+import dinahelp.pojo.Merge;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
@@ -29,10 +34,19 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 	public static int y;
 	public static int largura;
 	public static int altura;
-
+	public AudioNegocio audio;
+	public VideoNegocio video;
+	private boolean gravaAudio = false;
+	private boolean parando = false;
+	private Rectangle retangulo = new Rectangle(0, 0, 360, 240);
+	private int fps = 15;
+	private int frequencia = 22050;
+	
 	/** Creates new form VideoGUI */
 	public VideoGUI() {
 		x = y = largura = altura = 0;
+		audio = new AudioNegocio();
+		video = new VideoNegocio();
 		initComponents();
 	}
 
@@ -163,10 +177,163 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
 			else{
 				// Iniciar gravação sincronizada
-				long sinc = System.currentTimeMillis();
+				long tempoSinc = System.currentTimeMillis();
+				audio.setSyncTime(tempoSinc);
+				video.setSyncTime(tempoSinc);
+				if (gravaAudio) {
+					// É necessário avisar o VideoNegocio de que o áudio também será gravado.
+					video.audioRecording = true;
+					// Inicia gravação do áudio
+					audio.stopped = false;
+					audio.wakeUp();
+				}
+				// Inicia gravação do vídeo
+				video.setNaoTerminado(true);
+				video.wakeUp();
 			}
 		} else if (COMANDO_PARA.equals(comando)) {
 			
+			parando = true;
+            PararThread pararThread = new PararThread();
+            pararThread.setPriority(Thread.MIN_PRIORITY);
+            pararThread.start();
 		}
 	}
+	
+	private void parar() {
+        
+        video.naoTerminado = false;
+        audio.stopped = true;
+        
+		// Testar sem isso depois
+		while (video.recording) {
+			video.hold();
+		}
+
+        if (gravaAudio) {
+            audio.stopRecording();
+            video.audioRecording = false;
+            video.wakeUp(); // VER ISSO
+        }
+        
+		/** Encode video */
+       video.encode();
+        
+        /** Merging audio and video */
+        if (gravaAudio) {
+            if (video.unRecoverableError) {
+//                restoreGUI(); // TALVEZ USAR ISSO PRA ZERAR AS COISAS
+                JOptionPane.showMessageDialog(null, "Erro ao criar arquivo mov. Abortando.");
+            } else {
+                if (video.error) {
+                    JOptionPane.showMessageDialog(null, "Erro ao gravar o video.");
+                }
+                while (video.running) 
+                    video.hold();
+                
+                while (audio.recording)
+                    audio.hold();
+                
+                // Juntar áudio e vídeo
+                try {
+                    String arquivoAudio = "";
+					String caminhoVideo = "c:\\teste\\projetos\\video.mov"; // Ver o caminho de gravação do áudio/vídeo
+                    arquivoAudio = audio.audioFile.toURL().toString(); // Ver o caminho de gravação do áudio/vídeo
+                    String argumentosMerge[] = {"-o", caminhoVideo, video.tempFile, arquivoAudio};
+                    
+                    // Restaura a GUI e deixa o merge executando em segundo plano
+					// restoreGUI(); // Ver para talvez zerar as coisas de volta para o padrão
+                    if (mergeAudioVideo(argumentosMerge))
+                        JOptionPane.showMessageDialog(null, "Vídeo gravado com sucesso em "+argumentosMerge[1]);
+                } catch (Exception e) {
+//                    restoreGUI();
+                    System.out.println(e);
+                }
+            }
+        } else {
+//            restoreGUI();
+        }
+    }
+	
+	private class PararThread extends Thread {
+        
+        public void run() {
+            try {
+                parar();
+            } catch (Exception e) {
+                System.out.println("Stop thread cancelled");
+                System.out.println(e);
+            } finally {
+//                myProgressBar.dispose();
+            }
+        }
+    }
+	
+	private boolean mergeAudioVideo(String[] mergeArguments) {
+        try {                    
+            new Merge(mergeArguments);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao mesclar arquivos");
+        } catch (OutOfMemoryError o) {
+            JOptionPane.showMessageDialog(null, "Erro ao mesclar arquivos");
+        }
+        return false;
+    }
+	/** This method just creates the ScreenGrabber.
+     *  This method is called from the init() method,
+     *  in a separate thread, to try to get some flow in
+     *  the display of the program.
+     */
+    private void criaVideo() {
+        /** Make the ScreenGrabber. It will start as a seperate
+         *  thread, with highest priority. The constructor to
+         *  ScreenGrabber will just perform a speed test, and
+         *  then it's done. Both capRect and startFps are 
+         *  global parameters that are already initiated.
+         */
+		if(cbTelaInteira.isSelected()){
+		//	retangulo.setBounds(x, y, WIDTH, WIDTH);
+			x = y = 0;
+			largura = Toolkit.getDefaultToolkit().getScreenSize().width;
+			altura = Toolkit.getDefaultToolkit().getScreenSize().height;
+		}
+		retangulo.setBounds(x, y, largura, altura);
+        video = new VideoNegocio(retangulo, fps);
+        video.setPriority(Thread.MAX_PRIORITY);
+        /** Starts the ScreenGrabber thread. This thread will
+         *  basically go through the ScreenGrabber.init() method, 
+         *  and then wait, until recording is started. See the
+         *  ScreenGrabber.run() method.
+         */
+        video.start();        
+    } 
+    
+    /** This method just creates the Sampler.
+     *  This method is called from the init() method,
+     *  in a separate thread, to get some flow in
+     *  the display of the program.
+     */
+    private void criaAudio() {
+        /** Make the Sampler, with the defaultFileName
+         *  (a local parameter to the Sampler class) as the
+         *  name of the file that will be created by the
+         *  sampler. The Sampler is a separate thread, with
+         *  highest priority. The constructor will just
+         *  create the save file, and then it's done.
+         */
+        audio = new AudioNegocio();
+                
+        /** Pass on initial parameters to the sampler */
+        audio.channels = 1;
+        audio.sampleSize = 16;
+        audio.frequency = frequencia;
+        
+        audio.setPriority(Thread.MAX_PRIORITY);
+        /** Starts the Sampler thread. This thread will
+         *  basically go through the Sampler.init() method, 
+         *  and then wait, until recording is started. See the
+         *  Sampler.run() method.
+         */
+        audio.start();
+    }
 }

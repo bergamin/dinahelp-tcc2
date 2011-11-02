@@ -1,5 +1,6 @@
-package dinahelp.negocio;
+package dinahelp.util;
 
+import dinahelp.util.ListaDeDados;
 import java.io.*;
 import java.awt.Dimension;
 import javax.media.*;
@@ -15,8 +16,8 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 	int largura = -1, altura = -1, frameRate = 1;
 	private ListaDeDados imagens = null;
 	public int contaImagens = 0;
-	public boolean acabou = false;
-
+	private boolean acabou = false;
+	
 	@SuppressWarnings("static-access")
 	public boolean executar(int largura, int altura, int frameRate, MediaLocator ml) {
 		FonteDeDados ids = new FonteDeDados(largura, altura, frameRate);
@@ -188,7 +189,7 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 		}
 	}
 
-	JpegParaMov(String args[]) {
+	public JpegParaMov(String args[]) {
 
 		if (args.length == 0) {
 			prUsage();
@@ -248,10 +249,14 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 		}
 	}
 
-	public void setDataList(ListaDeDados JPGIm) {
+	public void setListaDeDados(ListaDeDados JPGIm) { // mudar depois!!
 		imagens = JPGIm;
 	}
 
+	public void setAcabou(boolean acabou) {
+		this.acabou = acabou;
+	}
+	
 	// called by other classes to wait for processor to finish writing mov file.
 	public synchronized void waitFor() {
 		try {

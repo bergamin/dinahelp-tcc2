@@ -1,4 +1,4 @@
-package dinahelp.negocio;
+package dinahelp.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +19,7 @@ public class ListaDeDados {
 	private int contaPerdidos; // contador internos de quantos já foram perdidos até o momento
 	private byte[] dados; // Array de bytes com os dados a serem lidos pelo método leDados
 
-	ListaDeDados() {
+	public ListaDeDados() {
 		contaPerdidos = 0;
 	}
 	// Seta o arquivo com os frames
