@@ -249,6 +249,9 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 			System.err.println("Cannot build media locator from: " + outputURL);
 			System.exit(0);
 		}
+		
+		
+		
 	}
 
 	public void setListaDeDados(ListaDeDados JPGIm) { // mudar depois!!

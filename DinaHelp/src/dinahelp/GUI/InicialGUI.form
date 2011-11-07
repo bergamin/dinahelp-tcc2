@@ -241,7 +241,7 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JScrollPane()"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="aProjetos = new Arvore();"/>
-        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="static Arvore aProjetos;"/>
+        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="public static Arvore aProjetos;"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="spProjetos.setViewportView(aProjetos);"/>
       </AuxValues>
 

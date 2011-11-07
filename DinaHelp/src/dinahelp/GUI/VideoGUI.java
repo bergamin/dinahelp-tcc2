@@ -14,10 +14,13 @@ import com.sun.awt.AWTUtilities;
 import dinahelp.negocio.AudioNegocio;
 import dinahelp.negocio.VideoNegocio;
 import dinahelp.pojo.Merge;
+import dinahelp.util.CopiaArquivos;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -35,19 +38,17 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 	public static int largura;
 	public static int altura;
 	public AudioNegocio audio;
-	public VideoNegocio video;
+	public static VideoNegocio video;
 	private boolean gravaAudio = false;
 	private boolean parando = false;
 	private Rectangle retangulo = new Rectangle(0, 0, 360, 240);
-	private int fps = 50;
+	private int fps = 30;
 	private int frequencia = 22050;
 	
 	/** Creates new form VideoGUI */
 	public VideoGUI() {
 		x = y = largura = altura = 0;
 		
-//		audio = new AudioNegocio();
-//		video = new VideoNegocio(retangulo, fps);
 		criaAudio();
 		criaVideo();
 		initComponents();
@@ -66,6 +67,8 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
         bFimGrava = new javax.swing.JButton();
         bArea = new javax.swing.JButton();
         cbTelaInteira = new javax.swing.JCheckBox();
+        tfNomeVideo = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -86,29 +89,42 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
         cbTelaInteira.setActionCommand(COMANDO_TELAINTEIRA);
         cbTelaInteira.addActionListener(this);
 
+        jLabel1.setText("Nome:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfNomeVideo, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bArea)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbTelaInteira))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
                         .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bFimGrava))
-                    .addComponent(cbTelaInteira)
-                    .addComponent(bArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(bFimGrava)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bArea)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(tfNomeVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bArea)
+                    .addComponent(cbTelaInteira))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbTelaInteira)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bFimGrava))
@@ -158,6 +174,8 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JButton bFimGrava;
     private javax.swing.JButton bIniGrava;
     private javax.swing.JCheckBox cbTelaInteira;
+    private javax.swing.JLabel jLabel1;
+    public static javax.swing.JTextField tfNomeVideo;
     // End of variables declaration//GEN-END:variables
 
 	@Override
@@ -179,6 +197,8 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 			
 			if(!cbTelaInteira.isSelected() && x == 0 && y == 0 && largura == 0 && altura == 0)
 				JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
+			else if(tfNomeVideo.getText().isEmpty())
+				JOptionPane.showMessageDialog(null, "Deve-se escolher um nome para o arquivo de vídeo.");
 			else{
 				if(cbTelaInteira.isSelected()){
 					x = y = 0;
@@ -202,11 +222,12 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
 				video.wakeUp();
 			}
 		} else if (COMANDO_PARA.equals(comando)) {
-			
 			parando = true;
             PararThread pararThread = new PararThread();
             pararThread.setPriority(Thread.MIN_PRIORITY);
             pararThread.start();
+			CarregamentoGUI c = new CarregamentoGUI();
+			c.setVisible(true);
 		}
 	}
 	
@@ -247,9 +268,9 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener{
                 // Juntar áudio e vídeo
                 try {
                     String arquivoAudio = "";
-					String caminhoVideo = "c:\\teste\\projetos"; // Ver o caminho de gravação do áudio/vídeo
+					String caminhoVideo = ""; // Ver o caminho de gravação do áudio/vídeo
                     arquivoAudio = audio.audioFile.toURL().toString(); // Ver o caminho de gravação do áudio/vídeo
-                    String argumentosMerge[] = {"-o", caminhoVideo, video.tempFile, arquivoAudio};
+                    String argumentosMerge[] = {"-o", caminhoVideo, video.arquivoTemp, arquivoAudio};
                     
                     // Restaura a GUI e deixa o merge executando em segundo plano
 					// restoreGUI(); // Ver para talvez zerar as coisas de volta para o padrão

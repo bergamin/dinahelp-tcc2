@@ -1,6 +1,5 @@
 package dinahelp.util;
 
-
 import dinahelp.GUI.InicialGUI;
 import java.awt.GridLayout;
 import java.awt.Toolkit;

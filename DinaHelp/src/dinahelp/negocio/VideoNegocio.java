@@ -23,6 +23,7 @@ import javax.imageio.*;
 import java.net.*;
 import com.sun.image.codec.jpeg.*;
 import dinahelp.util.JpegParaMov;
+import dinahelp.GUI.InicialGUI;
 
 /** This class is used both to record a movie and to take
  *  separate screen shots. The movie is recorded into a temporary
@@ -133,10 +134,8 @@ public class VideoNegocio extends Thread {
      *  method.
      */
     public boolean initing = false;
-    /** The name of the tempFiles. This is changed in Run_KRUT.setAllSaveFiles(),
-     *  and changing it here has no effect.
-     */
-    public String tempFile = "temp.mov";
+    
+    public String arquivoTemp = "temp.mov";
     /** The name and path of the screenshotFile. It is changed from the
      *  setAllSaveFiles() method in the Run_KRUT class.
      */
@@ -563,6 +562,11 @@ public class VideoNegocio extends Thread {
 	public void setNaoTerminado(boolean naoTerminado) {
 		this.naoTerminado = naoTerminado;
 	}
+
+//	public void setArquivoTemp(String arquivoTemp) {
+//		this.arquivoTemp = InicialGUI.aProjetos.getCaminho()+"\\"+arquivoTemp+".mov";
+//	}
+	
     
     
     /**	Creates and returns the mouse cursor, given the
@@ -935,7 +939,7 @@ public class VideoNegocio extends Thread {
     public void startDumper(ListaDeDados imagens) {
         // Create a new tempfile filename for each movie.
         try {
-            File testFile = new File(tempFile);
+            File testFile = new File(arquivoTemp);
 //            while (testFile.exists() && !testFile.delete()) {
 //                testFile = mySaveQuery.filterFile(mySaveQuery.getNextFile(testFile));
 //            }
@@ -945,6 +949,7 @@ public class VideoNegocio extends Thread {
 
             // Create a new dumper.
             JpegParaMov dumper = new JpegParaMov(arguments);
+			
             // Point dumper to datasource.
             dumper.setListaDeDados(imagens);
             // Run dumper, and wait for it to finish with waitFor().

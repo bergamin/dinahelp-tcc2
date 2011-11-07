@@ -220,7 +220,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JMenuBar mbInicial;
     private javax.swing.JMenuItem miNovoProjeto;
     private javax.swing.JSeparator sProjetos;
-    static Arvore aProjetos;
+    public static Arvore aProjetos;
     private javax.swing.JScrollPane spProjetos;
     // End of variables declaration//GEN-END:variables
 
