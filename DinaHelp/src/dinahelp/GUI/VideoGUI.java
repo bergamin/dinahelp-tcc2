@@ -229,7 +229,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
             PararThread pararThread = new PararThread();
             pararThread.setPriority(Thread.MIN_PRIORITY);
             pararThread.start();
-            CarregamentoGUI c = new CarregamentoGUI();
+            ConfirmaVideoGUI c = new ConfirmaVideoGUI();
             c.setVisible(true);
             dispose();
         }

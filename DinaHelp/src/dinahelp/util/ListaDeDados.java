@@ -5,7 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
+/**
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
+ */
 public class ListaDeDados {
 
 	public boolean acabou = false; // indica que todos os frames foram lidos
@@ -30,7 +34,7 @@ public class ListaDeDados {
 			fis = new FileInputStream(this.arquivo);
 			return true;
 		} catch (FileNotFoundException e) {
-			System.err.println("Arquivo não encontrado!");
+//			System.err.println("Arquivo não encontrado!");
 			return false;
 		}
 	}
@@ -55,11 +59,11 @@ public class ListaDeDados {
 				imagensEnviadas++;
 				return dados; // Retorna o frame
 			} else {
-				System.err.println("Erro! Excesso de frames!");
+//				System.err.println("Erro! Excesso de frames!");
 				return null;
 			}
 		} catch (IOException e) {
-			System.err.println("Erro de arquivo: " + e);
+//			System.err.println("Erro de arquivo: " + e);
 			return null;
 		}
 	}

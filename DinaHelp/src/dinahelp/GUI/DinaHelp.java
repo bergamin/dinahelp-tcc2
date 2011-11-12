@@ -12,9 +12,6 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class DinaHelp {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {

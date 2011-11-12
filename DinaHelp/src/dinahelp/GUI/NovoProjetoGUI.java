@@ -9,12 +9,8 @@ import javax.swing.JOptionPane;
  */
 public class NovoProjetoGUI extends javax.swing.JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/** Creates new form NovoProjetoGUI */
 	public NovoProjetoGUI() {
 		initComponents();
 	}
@@ -72,10 +68,10 @@ public class NovoProjetoGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlNovoProjNome)
                     .addComponent(jtfNovoProjNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbNovoProjCancelar)
-                    .addComponent(jbNovoProjOK))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbNovoProjOK)
+                    .addComponent(jbNovoProjCancelar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -100,9 +96,6 @@ public class NovoProjetoGUI extends javax.swing.JFrame {
 		}
 	}
 
-	/**
-	 * @param args the command line arguments
-	 */
 	public static void main(String args[]) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 

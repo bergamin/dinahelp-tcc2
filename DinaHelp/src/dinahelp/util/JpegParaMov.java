@@ -1,6 +1,5 @@
 package dinahelp.util;
 
-import dinahelp.util.ListaDeDados;
 import java.io.*;
 import java.awt.Dimension;
 import javax.media.*;
@@ -10,6 +9,11 @@ import javax.media.protocol.DataSource;
 import javax.media.datasink.*;
 import javax.media.format.VideoFormat;
 
+/**
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
+ */
 public class JpegParaMov extends Thread implements ControllerListener, DataSinkListener {
 
 	MediaLocator ml;
@@ -17,7 +21,7 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 	private ListaDeDados imagens = null;
 	public int contaImagens = 0;
 	private boolean acabou = false;
-	
+
 	@SuppressWarnings("static-access")
 	public boolean executar(int largura, int altura, int frameRate, MediaLocator ml) {
 		FonteDeDados ids = new FonteDeDados(largura, altura, frameRate);
@@ -31,18 +35,18 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 		p.addControllerListener(this);
 		p.configure();
 		if (!aguardaEstado(p, p.Configured)) {
-		//	System.err.println("ERRO! Não foi possível configurar o processador.");
+			//	System.err.println("ERRO! Não foi possível configurar o processador.");
 			return false;
 		}
 
 		// Setando o descriptor para o formato do quicktime (mov)
 //		p.setContentDescriptor(new ContentDescriptor(FileTypeDescriptor.MSVIDEO));
 		p.setContentDescriptor(new ContentDescriptor(FileTypeDescriptor.QUICKTIME));
-		
+
 		TrackControl tc[] = p.getTrackControls();
 		Format f[] = tc[0].getSupportedFormats();
 		if (f == null || f.length <= 0) {
-		//	System.err.println("Formato de entrada não suportado: " + tc[0].getFormat());
+			//	System.err.println("Formato de entrada não suportado: " + tc[0].getFormat());
 			return false;
 		}
 
@@ -52,33 +56,33 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 
 		p.realize();
 		if (!aguardaEstado(p, p.Realized)) {
-		//	System.err.println("ERRO! Não foi possível criar o processador.");
+			//	System.err.println("ERRO! Não foi possível criar o processador.");
 			return false;
 		}
-		
+
 		DataSink ds;
 		if ((ds = criaDataSink(p, ml)) == null) {
-		//	System.err.println("ERRO! Não foi possível criar DataSink para o MediaLocator dado: " + ml);
+			//	System.err.println("ERRO! Não foi possível criar DataSink para o MediaLocator dado: " + ml);
 			return false;
 		}
 
 		ds.addDataSinkListener(this);
 		arquivoTerminado = false;
 
-	//	System.err.println("Iniciando processamento...");
+		//	System.err.println("Iniciando processamento...");
 
 		// Agora o encode começa efetivamente
 		try {
 			p.start();
 			ds.start();
 		} catch (IOException e) {
-		//	System.err.println("ERRO de I/O ao processar!");
+			//	System.err.println("ERRO de I/O ao processar!");
 			return false;
 		}
 
 		// Espera pelo evento de fim
 		esperaArquivoTerminado();
-		
+
 		try {
 			ds.close();
 		} catch (Exception e) {
@@ -87,27 +91,27 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 
 //		System.err.println("...fim do processamento.");
 		acorda();
-		
+
 		return true;
 	}
-	
+
 	DataSink criaDataSink(Processor p, MediaLocator ml) {
-		
+
 		DataSource ds;
-		
+
 		if ((ds = p.getDataOutput()) == null) {
-		//	System.err.println("ERRO! O processador não possui uma fonte de dados de saída");
+			//	System.err.println("ERRO! O processador não possui uma fonte de dados de saída");
 			return null;
 		}
-		
+
 		DataSink dsink;
-		
+
 		try {
-			System.err.println("- create DataSink for: " + ml);
+//			System.err.println("- create DataSink for: " + ml);
 			dsink = Manager.createDataSink(ds, ml);
 			dsink.open();
 		} catch (Exception e) {
-			System.err.println("Cannot create the DataSink: " + e);
+//			System.err.println("Cannot create the DataSink: " + e);
 			return null;
 		}
 
@@ -190,9 +194,9 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 	}
 
 	public JpegParaMov(String args[]) {
-		
+
 		imagens = new ListaDeDados();
-		
+
 		if (args.length == 0) {
 			prUsage();
 		}
@@ -235,7 +239,7 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 			prUsage();
 		}
 		if (largura < 0 || altura < 0) {
-			System.err.println("Please specify the correct image size.");
+//			System.err.println("Please specify the correct image size.");
 			prUsage();
 		}
 
@@ -246,12 +250,12 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 
 
 		if ((ml = createMediaLocator(outputURL)) == null) {
-			System.err.println("Cannot build media locator from: " + outputURL);
+//			System.err.println("Cannot build media locator from: " + outputURL);
 			System.exit(0);
 		}
-		
-		
-		
+
+
+
 	}
 
 	public void setListaDeDados(ListaDeDados JPGIm) { // mudar depois!!
@@ -261,7 +265,7 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 	public void setAcabou(boolean acabou) {
 		this.acabou = acabou;
 	}
-	
+
 	// called by other classes to wait for processor to finish writing mov file.
 	public synchronized void waitFor() {
 		try {
@@ -269,7 +273,7 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 				wait(3000);
 			}
 		} catch (InterruptedException ie) {
-			System.err.println("Exception while waiting for movieprocessor " + ie);
+//			System.err.println("Exception while waiting for movieprocessor " + ie);
 		}
 	}
 
@@ -284,7 +288,7 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 	}
 
 	static void prUsage() {
-		System.err.println("Usage: java JpegImagesToMovie -w <width> -h <height> -f <frame rate> -o <output URL> <input JPEG file 1> <input JPEG file 2> ...");
+//		System.err.println("Usage: java JpegImagesToMovie -w <width> -h <height> -f <frame rate> -o <output URL> <input JPEG file 1> <input JPEG file 2> ...");
 		System.exit(-1);
 	}
 
@@ -455,10 +459,10 @@ public class JpegParaMov extends Thread implements ControllerListener, DataSinkL
 			// Check if we've acabou all the frames.
 			if (imagens.acabou) {
 				// We are done.  Set EndOfMedia.
-				System.err.println("Done reading all images.");
-				System.err.println("Frames: " + imagens.totImg);
-				System.err.println("Missed frames: "
-						+ (imagens.imagensEnviadas - imagens.totImg));
+//				System.err.println("Done reading all images.");
+//				System.err.println("Frames: " + imagens.totImg);
+//				System.err.println("Missed frames: "
+//						+ (imagens.imagensEnviadas - imagens.totImg));
 				buf.setEOM(true);
 				buf.setOffset(0);
 				buf.setLength(0);

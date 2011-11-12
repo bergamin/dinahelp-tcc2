@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 /**
- *
- * @author Guilherme
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
  */
 public class CopiaArquivos {
-	
-	public CopiaArquivos(String origem, String destino){
+
+	public CopiaArquivos(String origem, String destino) {
 		//streams  
 		FileInputStream orig;
 		FileOutputStream dest;
@@ -36,7 +37,7 @@ public class CopiaArquivos {
 			new File(origem).delete();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 }

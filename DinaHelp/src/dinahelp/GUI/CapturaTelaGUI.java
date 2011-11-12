@@ -58,7 +58,6 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
-
 //		java.awt.EventQueue.invokeLater(new Runnable() {
 //
 //			@Override
@@ -84,23 +83,23 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 		ct.setY2(e.getY());
 		ct.setXTela2(e.getXOnScreen());
 		ct.setYTela2(e.getYOnScreen());
-		
-		if(ct.getLargura() < 0){
+
+		if (ct.getLargura() < 0) {
 			ct.setLargura(Math.abs(ct.getLargura()));
 			ct.setXTela1(ct.getXTela1() - ct.getLargura());
 			ct.setXTela2(ct.getXTela2() + ct.getLargura());
 		}
-		if(ct.getAltura() < 0){
+		if (ct.getAltura() < 0) {
 			ct.setAltura(Math.abs(ct.getAltura()));
 			ct.setYTela1(ct.getYTela1() - ct.getAltura());
 			ct.setYTela2(ct.getYTela2() + ct.getAltura());
 		}
-		if(tipo == 'I'){
+		if (tipo == 'I') {
 			AWTUtilities.setWindowOpacity(this, 0.0f);
 			Date d = new Date();
 			long l = d.getTime();
 			new CapturaTelaNegocio().captura(InicialGUI.aProjetos.getCaminho() + "\\" + l + ".png", ct.getXTela1(), ct.getYTela1(), ct.getLargura(), ct.getAltura());
-		}else{ // tipo == 'V';
+		} else { // tipo == 'V';
 			VideoGUI.x = ct.getXTela1();
 			VideoGUI.y = ct.getYTela1();
 			VideoGUI.largura = ct.getLargura();
@@ -121,12 +120,12 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); // Limpa a tela
-		
+
 		ct.setLargura(ct.getX1() - ct.getX());
 		ct.setAltura(ct.getY1() - ct.getY());
 		ct.setLargura(ct.getLargura() * -1);
 		ct.setAltura(ct.getAltura() * -1);
-		
+
 		g.drawRect(ct.getX1(), ct.getY1(), ct.getLargura(), ct.getAltura());
 	}
 
