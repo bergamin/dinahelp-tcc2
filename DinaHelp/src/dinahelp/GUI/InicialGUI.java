@@ -227,8 +227,10 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 		String comando = e.getActionCommand();
 
 		if (COMANDO_ADD.equals(comando)) {
-			NovaFuncionalidadeGUI nf = new NovaFuncionalidadeGUI();
-			nf.setVisible(true);
+			if(!aProjetos.getCaminho().contains(".")){
+				NovaFuncionalidadeGUI nf = new NovaFuncionalidadeGUI();
+				nf.setVisible(true);
+			}
 		} else if (COMANDO_REMOVE.equals(comando)) {
 			aProjetos.removeNodo();
 		} else if (COMANDO_TEXTO.equals(comando)) {
@@ -248,7 +250,8 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 			// TODO áudio
 		}else if (COMANDO_ABRIR.equals(comando)){
 			try {
-				Runtime.getRuntime().exec("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe "+aProjetos.getCaminho());
+				System.out.println(aProjetos.getCaminho());
+				Runtime.getRuntime().exec("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe \""+aProjetos.getCaminho()+"\"");
 				
 			} catch (IOException ex) {
 				Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);

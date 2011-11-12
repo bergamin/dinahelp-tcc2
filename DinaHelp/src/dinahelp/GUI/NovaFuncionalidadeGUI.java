@@ -111,11 +111,13 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if (COMANDO_ADD.equals(comando)) {
-			if (new Validador().arquivoValido(jtfNovaFuncNome.getText())){
-				InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
-				File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
-				dir.mkdirs();
-				dispose();
+			if (Validador.caminhoValido(jtfNovaFuncNome.getText())){
+				if(!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText())){
+					InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
+					File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
+					dir.mkdirs();
+					dispose();
+				}
 			}
 		}
 	}
