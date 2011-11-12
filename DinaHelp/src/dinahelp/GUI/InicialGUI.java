@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -237,6 +238,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 			AjudaTextualGUI tat = new AjudaTextualGUI();
 			tat.setVisible(true);
 		} else if (COMANDO_SCREENSHOT.equals(comando)) {
+			setExtendedState(JFrame.ICONIFIED);
 			CapturaTelaGUI tsc = new CapturaTelaGUI('I');
 			tsc.setExtendedState(MAXIMIZED_BOTH);
 			AWTUtilities.setWindowOpacity(tsc, 0.5f);
