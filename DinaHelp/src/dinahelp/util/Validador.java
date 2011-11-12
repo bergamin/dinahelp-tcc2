@@ -16,7 +16,7 @@ public class Validador {
 						 || nome.contains("|"));
 		
 		if(!retorno)
-			JOptionPane.showMessageDialog(null, "Os nomes de arquivo não podem conter nenhum dos seguintes caracteres:\n"
+			JOptionPane.showMessageDialog(null, "O nome não pode conter nenhum dos seguintes caracteres:\n"
 											  + ". \\ / : * ? \" < > |");
 		return retorno;
 	}

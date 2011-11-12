@@ -32,7 +32,7 @@ public class Arvore extends JPanel {
 		modelo = new DefaultTreeModel(root);
 		modelo.addTreeModelListener(new MyTreeModelListener());
 		arvore = new JTree(modelo);
-		arvore.setEditable(true);
+		arvore.setEditable(false);
 		arvore.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		arvore.setShowsRootHandles(true);
 

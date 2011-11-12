@@ -1,5 +1,6 @@
 package dinahelp.GUI;
 
+import dinahelp.util.Validador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -110,19 +111,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if (COMANDO_ADD.equals(comando)) {
-			if (jtfNovaFuncNome.getText().contains(".")
-			 || jtfNovaFuncNome.getText().contains("\\")
-			 || jtfNovaFuncNome.getText().contains("/")
-			 || jtfNovaFuncNome.getText().contains(":")
-			 || jtfNovaFuncNome.getText().contains("*")
-			 || jtfNovaFuncNome.getText().contains("?")
-			 || jtfNovaFuncNome.getText().contains("\"")
-			 || jtfNovaFuncNome.getText().contains("<")
-			 || jtfNovaFuncNome.getText().contains(">")
-			 || jtfNovaFuncNome.getText().contains("|")){
-				JOptionPane.showMessageDialog(null, "Os nomes de arquivo não podem conter nenhum dos seguintes caracteres:\n"
-												  + ". \\ / : * ? \" < > |");
-			}else{
+			if (new Validador().arquivoValido(jtfNovaFuncNome.getText())){
 				InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
 				File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
 				dir.mkdirs();

@@ -2,6 +2,7 @@ package dinahelp.GUI;
 
 import dinahelp.negocio.AjudaTextualNegocio;
 import dinahelp.pojo.AjudaTextual;
+import dinahelp.util.Validador;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -108,13 +109,15 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
 	}//GEN-LAST:event_btnCancelarActionPerformed
 
         private void btnSalvaSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvaSairActionPerformed
-            AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-            AjudaTextual ajudaTextual = new AjudaTextual();
-            ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-            ajudaTextual.setTexto(txaEditTexto.getText());
-            //Pegar o getNome() da funcionalidade para passar o caminho
-            gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
-            dispose();
+            if(new Validador().arquivoValido(txfTitulo.getText())){
+				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
+				AjudaTextual ajudaTextual = new AjudaTextual();
+				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
+				ajudaTextual.setTexto(txaEditTexto.getText());
+				//Pegar o getNome() da funcionalidade para passar o caminho
+				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+				dispose();
+			}
         }//GEN-LAST:event_btnSalvaSairActionPerformed
 
     private void btnSalvaActionPerformed(java.awt.event.ActionEvent evt) {

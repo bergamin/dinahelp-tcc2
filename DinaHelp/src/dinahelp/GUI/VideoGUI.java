@@ -72,6 +72,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Ajuda em vídeo");
         setResizable(false);
 
         bIniGrava.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/video2.png"))); // NOI18N
@@ -79,7 +80,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
         bIniGrava.setActionCommand(COMANDO_GRAVA);
         bIniGrava.addActionListener(this);
 
-        bFimGrava.setText("P");
+        bFimGrava.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/parar.png"))); // NOI18N
         bFimGrava.setActionCommand(COMANDO_PARA);
         bFimGrava.addActionListener(this);
 
@@ -112,7 +113,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
                         .addGap(32, 32, 32)
                         .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bFimGrava)))
+                        .addComponent(bFimGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -127,9 +128,9 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
                     .addComponent(bArea)
                     .addComponent(cbTelaInteira))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bFimGrava))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bFimGrava, 0, 0, Short.MAX_VALUE)
+                    .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
