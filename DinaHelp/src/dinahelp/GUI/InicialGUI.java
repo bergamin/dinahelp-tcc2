@@ -252,7 +252,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 			try {
 				System.out.println(aProjetos.getCaminho());
 				Runtime.getRuntime().exec("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe \""+aProjetos.getCaminho()+"\"");
-				
 			} catch (IOException ex) {
 				Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);
 			}
