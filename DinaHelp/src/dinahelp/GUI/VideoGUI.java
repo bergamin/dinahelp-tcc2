@@ -199,6 +199,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
             }
         } else if (COMANDO_GRAVA.equals(comando)) {
             setExtendedState(JFrame.ICONIFIED);
+            DinaHelp.iniciaGUI.setExtendedState(JFrame.ICONIFIED);
             if (!cbTelaInteira.isSelected() && x == 0 && y == 0 && largura == 0 && altura == 0) {
                 JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
             } else if (tfNomeVideo.getText().isEmpty()) {
