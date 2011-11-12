@@ -76,6 +76,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/dinahelp/util/imagens/video2.png"/>
         </Property>
+        <Property name="mnemonic" type="int" value="99"/>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="COMANDO_GRAVA" type="code"/>
         </Property>
