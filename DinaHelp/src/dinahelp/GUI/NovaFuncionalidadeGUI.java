@@ -4,7 +4,6 @@ import dinahelp.util.Validador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.JOptionPane;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -111,8 +110,8 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if (COMANDO_ADD.equals(comando)) {
-			if (Validador.caminhoValido(jtfNovaFuncNome.getText())){
-				if(!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText())){
+			if (Validador.caminhoValido(jtfNovaFuncNome.getText())) {
+				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText())) {
 					InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
 					File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
 					dir.mkdirs();

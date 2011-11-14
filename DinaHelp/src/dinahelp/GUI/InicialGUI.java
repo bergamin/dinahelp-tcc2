@@ -3,13 +3,14 @@ package dinahelp.GUI;
 import com.sun.awt.AWTUtilities;
 import dinahelp.util.Arvore;
 import dinahelp.util.Config;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -228,35 +229,46 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 		String comando = e.getActionCommand();
 
 		if (COMANDO_ADD.equals(comando)) {
-			if(!aProjetos.getCaminho().contains(".")){
+			if (!aProjetos.getCaminho().contains(".")) {
 				NovaFuncionalidadeGUI nf = new NovaFuncionalidadeGUI();
 				nf.setVisible(true);
 			}
 		} else if (COMANDO_REMOVE.equals(comando)) {
 			aProjetos.removeNodo();
 		} else if (COMANDO_TEXTO.equals(comando)) {
-			AjudaTextualGUI tat = new AjudaTextualGUI();
-			tat.setVisible(true);
+			if (!aProjetos.getCaminho().contains(".")) {
+				AjudaTextualGUI tat = new AjudaTextualGUI();
+				tat.setVisible(true);
+			}
 		} else if (COMANDO_SCREENSHOT.equals(comando)) {
-			setExtendedState(JFrame.ICONIFIED);
-			CapturaTelaGUI tsc = new CapturaTelaGUI('I');
-			tsc.setExtendedState(MAXIMIZED_BOTH);
-			AWTUtilities.setWindowOpacity(tsc, 0.5f);
-			tsc.setVisible(true);
+			if (!aProjetos.getCaminho().contains(".")) {
+				setExtendedState(JFrame.ICONIFIED);
+				CapturaTelaGUI tsc = new CapturaTelaGUI('I');
+				tsc.setExtendedState(MAXIMIZED_BOTH);
+				AWTUtilities.setWindowOpacity(tsc, 0.5f);
+				tsc.setVisible(true);
+			}
 		} else if (COMANDO_VIDEO.equals(comando)) {
-			VideoGUI gv = new VideoGUI();
-			gv.setVisible(true);
+			if (!aProjetos.getCaminho().contains(".")) {
+				VideoGUI gv = new VideoGUI();
+				gv.setVisible(true);
+			}
 		} else if (COMANDO_ANIMACAO.equals(comando)) {
-			// TODO animação
+			if (!aProjetos.getCaminho().contains(".")) {
+				// TODO animação
+			}
 		} else if (COMANDO_AUDIO.equals(comando)) {
-			// TODO áudio
-		}else if (COMANDO_ABRIR.equals(comando)){
+			if (!aProjetos.getCaminho().contains(".")) {
+				// TODO áudio
+			}
+		} else if (COMANDO_ABRIR.equals(comando)) {
 			try {
-				System.out.println(aProjetos.getCaminho());
-				Runtime.getRuntime().exec("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe \""+aProjetos.getCaminho()+"\"");
+				Desktop desktop = Desktop.getDesktop();
+				desktop.open(new File(aProjetos.getCaminho()));
 			} catch (IOException ex) {
 				Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);
 			}
+			repaint();
 		}
 	}
 }

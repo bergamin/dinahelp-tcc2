@@ -1,32 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * VideoGUI.java
- *
- * Created on 29/10/2011, 14:14:45
- */
 package dinahelp.GUI;
 
 import com.sun.awt.AWTUtilities;
 import dinahelp.negocio.AudioNegocio;
 import dinahelp.negocio.VideoNegocio;
 import dinahelp.pojo.Merge;
-import dinahelp.util.CopiaArquivos;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Guilherme
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
  */
 public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
@@ -167,6 +155,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				new VideoGUI().setVisible(true);
 			}
@@ -203,10 +192,10 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			} else if (tfNomeVideo.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Deve-se escolher um nome para o arquivo de vídeo.");
 			} else {
-				
+
 				setExtendedState(JFrame.ICONIFIED);
 				DinaHelp.iniciaGUI.setExtendedState(JFrame.ICONIFIED);
-				
+
 				if (cbTelaInteira.isSelected()) {
 					x = y = 0;
 					largura = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -219,7 +208,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 				video.setSyncTime(tempoSinc);
 				if (gravaAudio) {
 					// É necessário avisar o VideoNegocio de que o áudio também será gravado.
-					video.audioRecording = true;
+					video.gravandoAudio = true;
 					// Inicia gravação do áudio
 					audio.stopped = false;
 					audio.wakeUp();
@@ -245,13 +234,13 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		audio.stopped = true;
 
 		// Testar sem isso depois
-		while (video.recording) {
+		while (video.gravando) {
 			video.hold();
 		}
 
 		if (gravaAudio) {
 			audio.stopRecording();
-			video.audioRecording = false;
+			video.gravandoAudio = false;
 			video.wakeUp(); // VER ISSO
 		}
 
@@ -260,37 +249,29 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
 		/** Merging audio and video */
 		if (gravaAudio) {
-			if (video.unRecoverableError) {
-//                restoreGUI(); // TALVEZ USAR ISSO PRA ZERAR AS COISAS
-				JOptionPane.showMessageDialog(null, "Erro ao criar arquivo mov. Abortando.");
-			} else {
-				if (video.error) {
-					JOptionPane.showMessageDialog(null, "Erro ao gravar o video.");
-				}
-				while (video.running) {
-					video.hold();
-				}
+			while (video.executando) {
+				video.hold();
+			}
 
-				while (audio.recording) {
-					audio.hold();
+			while (audio.recording) {
+				audio.hold();
+			}
+
+			// Juntar áudio e vídeo
+			try {
+				String arquivoAudio = "";
+				String caminhoVideo = ""; // Ver o caminho de gravação do áudio/vídeo
+				arquivoAudio = audio.audioFile.toURL().toString(); // Ver o caminho de gravação do áudio/vídeo
+				String argumentosMerge[] = {"-o", caminhoVideo, video.arquivoTemp, arquivoAudio};
+
+				// Restaura a GUI e deixa o merge executando em segundo plano
+				// restoreGUI(); // Ver para talvez zerar as coisas de volta para o padrão
+				if (mergeAudioVideo(argumentosMerge)) {
+					JOptionPane.showMessageDialog(null, "Vídeo gravado com sucesso em " + argumentosMerge[1]);
 				}
-
-				// Juntar áudio e vídeo
-				try {
-					String arquivoAudio = "";
-					String caminhoVideo = ""; // Ver o caminho de gravação do áudio/vídeo
-					arquivoAudio = audio.audioFile.toURL().toString(); // Ver o caminho de gravação do áudio/vídeo
-					String argumentosMerge[] = {"-o", caminhoVideo, video.arquivoTemp, arquivoAudio};
-
-					// Restaura a GUI e deixa o merge executando em segundo plano
-					// restoreGUI(); // Ver para talvez zerar as coisas de volta para o padrão
-					if (mergeAudioVideo(argumentosMerge)) {
-						JOptionPane.showMessageDialog(null, "Vídeo gravado com sucesso em " + argumentosMerge[1]);
-					}
-				} catch (Exception e) {
+			} catch (Exception e) {
 //                    restoreGUI();
-					System.out.println(e);
-				}
+				System.out.println(e);
 			}
 		} else {
 //            restoreGUI();
@@ -299,6 +280,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
 	private class PararThread extends Thread {
 
+		@Override
 		public void run() {
 			try {
 				parar();
@@ -311,6 +293,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		}
 	}
 
+	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	private boolean mergeAudioVideo(String[] mergeArguments) {
 		try {
 			new Merge(mergeArguments);
@@ -338,7 +321,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		video.setPriority(Thread.MAX_PRIORITY);
 		/** Starts the ScreenGrabber thread. This thread will
 		 *  basically go through the ScreenGrabber.init() method, 
-		 *  and then wait, until recording is started. See the
+		 *  and then wait, until gravando is started. See the
 		 *  ScreenGrabber.run() method.
 		 */
 		video.start();
@@ -367,7 +350,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		audio.setPriority(Thread.MAX_PRIORITY);
 		/** Starts the Sampler thread. This thread will
 		 *  basically go through the Sampler.init() method, 
-		 *  and then wait, until recording is started. See the
+		 *  and then wait, until gravando is started. See the
 		 *  Sampler.run() method.
 		 */
 		audio.start();

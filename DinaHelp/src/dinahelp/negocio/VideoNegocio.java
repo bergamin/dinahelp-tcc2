@@ -14,204 +14,83 @@ import dinahelp.util.JpegParaMov;
  */
 public class VideoNegocio extends Thread {
 
-	/** The capture area for video recording. */
+	// Área de captura da tela.
 	public Rectangle retangulo;
-	/** The video encoding quality. The value of this parameter will be
-	 *  overwritten from Run_KRUT.checkInited(), so changing the initial
-	 *  value of this parameter will have no effect.
-	 */
-	public float encQuality = 0.75f;
-	/** This value represents the limit for when the retangulo should move
-	 *  to be re-centered around the mouse pointer, if we are tracking
-	 *  the mouse pointer. A comparing value is calculated, and if this 
-	 *  comparing value is larger than the moveLimit value, the retangulo
-	 *  is re-centered. The comparing value is calculated as follows:<BR><BR>
-	 *  
-	 *  d1 =    The distance from the retangulo center to the mousepointer.<BR>
-	 *  d2 =    The distance from the retangulo center to the bounding edge of the
-	 *          retangulo, measured along the line through the mousepointer.<BR><BR>
-	 *
-	 *  moveLimit = d1 / d2
-	 */
-	public double moveLimit = 1.0;
-	/** This value represents the acceleration of the retangulo when
-	 *  we are tracking the mouse pointer. The value is used both for
-	 *  acceleration and retardation.
-	 *
-	 *  Currently, this value is updated in the run() method, at the start
-	 *  of the main loop, everytime a recording is started, so changing it
-	 *  here will have no effect.
-	 */
-	public int acceleration = 5;
-	/** time should only be read.
-	 *  time is the time in ms between each frame */
-	public double time;
-	/** maxNOPics should only be read.
-	 *  maxNOPics is the maximum number of frames that
-	 *  can be recorded into memory.
-	 */
-	public int maxNOPics;
-	/** cntMovies handles the numbering of the movie files,
-	 *  and is updated everytime a movie is finished recording.
-	 *  cntMovies should only be read.
-	 */
-	public int cntMovies = 0;
-	/** naoTerminado is set to false by user to stop recording. */
+	// Qualidade do encode de vídeo (1.0f é o máximo)
+	public float qualidadeEnc = 0.75f;
+	// Tempo em ms entre cada frame
+	public double tempo;
+	// Número máximo de frames que podem ser gravados na memória
+	public int NumMaxImg;
+	// Numeração para o nome dos arquivos temporários
+	public int contMov = 0;
+	// Setado para false para parar a gravação
 	public boolean naoTerminado = false;
-	/** recording is set to false at the exact time when capping is finished.
-	 *  This is used to synchronize shound. */
-	public boolean recording = false;
-	/** running is set to false when the VideoNegocio
-	 *  is ready for another recording. It is set to true
-	 *  in the run() method and changed back to false in 
-	 *  the encode() method.
-	 */
-	public boolean running = false;
-	/** A flag to indicate that something has gone terribly
-	 *  wrong with the recording of the movie. Old. Only used in old methods. */
-	public boolean unRecoverableError = false;
-	/** getMouse selects if the mouse pointer should be in the film.
-	 *  getMouse can be changed at any time, including during recording,
-	 *  to start/stop recording mouse positions.
-	 */
-	public boolean getMouse = true;
-	/** Should we follow the mouse pointer around the screen or not?
-	 *  This parameter can be changed at any time, including during recording.
-	 */
-	public boolean followMouse = false;
-	/** if preview is true, an image is sent to the SnapShot
-	 *  object at each frame, where a preview film of the
-	 *  recording is running.
-	 */
-	public boolean preview = false;
-	/** error is just used to signal that something went wrong with video
-	 *  recording. error is set true if an exception was fired in the run()
-	 *  method. error is set false in the init() method.
-	 */
-	public boolean error = false;
-	/** A flag used to prevent the recording from starting by
-	 *  mistake while the init() method is running. Changed in 
-	 *  the init() method, and checked at the beginning of run().
-	 *  Also changed before and after the call to init() in encode().
-	 *  The initing parameter could be changed by the user before
-	 *  and after calling init() for increased reliability on the
-	 *  flag controls, but in reality reliability is pretty good the
-	 *  way it is, with changes at the start and end of the init()
-	 *  method.
-	 */
-	public boolean initing = false;
+	// é colocado como false no momento em que pára a gravação.
+	// serve para sincronizar com o áudio
+	public boolean gravando = false;
+	// é colocado como false quando o VideoNegocio estiver
+	// pronto para uma nova gravação é setado para true no
+	// método run() alterado novamente para false no método encode()
+	public boolean executando = false;
+	// Indica se o mouse deve ser capturado ou não
+	public boolean mostraMouse = true;
+	// Previne a gravação de iniciar por engano enquanto o método init()
+	// estiver executando. é alterado antes e depois da chamada no init()
+	// e dentro dele. É verificado no início do método run()
+	public boolean inicializando = false;
+	// Caminho para a gravação do arquivo temporário de vídeo.
+	// No caso, a raiz de onde estiver instalado o programa.
 	public String arquivoTemp = "temp.mov";
-	/** The name and path of the screenshotFile. It is changed from the
-	 *  setAllSaveFiles() method in the Run_KRUT class.
-	 */
-	public File screenshotFile = null;
-	/**  This object is used if the user wants to interrupt the encoding.
-	 *   In the EncodeThread constuctor, the DataList is also given to
-	 *   myProgressBar, so that the progressBar can stop the
-	 *   dumper.
-	 */
-//    public krut.KRUT_GUI.EncodingProgressBar myProgressBar;
-	/** This flag can be used to get the run() method to hold
-	 *  at the end, in order to increase sync between audio
-	 *  and video. If so, it should be set true when audio
-	 *  recording is started, and then set false once recording
-	 *  is finished. The practical result will be that the
-	 *  run() method will take a pause before performing
-	 *  it's call to init().
-	 *
-	 *  After this parameter is set false when audio recording
-	 *  is finished, the run() method MUST be woken with a call
-	 *  to wakeUp().
-	 */
-	public boolean audioRecording = false;
-	/** It is necessary for the VideoNegocio to have access to a SaveFileChooser,
-	 *  because the VideoNegocio needs to use the getNextFile() method both in
-	 *  init() and in finished(). This parameter will be updated by Run_KRUT
-	 *  as soon as the global SaveFileChooser is initiated.
-	 */
-//    public krut.KRUT_GUI.SaveFileChooser mySaveQuery =
-//            new krut.KRUT_GUI.SaveFileChooser();
-	/** It is necessary for the VideoNegocio to have access to a SnapShot,
-	 *  in case a preview film is to be displayed during recording.
-	 *  This parameter will be updated by Run_KRUT immideatly after
-	 *  after initializing.
-	 */
-//    public krut.KRUT_GUI.SnapShot mySnapShot =
-//            new krut.KRUT_GUI.SnapShot();
-	/**	Variables for the run() and init() methods only */
-	/** cntPics is used to count which frame we're on.
-	 *  This parameter will always come out from the init()
-	 *  method with the value 1, since the first frame is
-	 *  already written. This means that we can not miss
-	 *  the first frame. This is important in the DataList
-	 *  class.
-	 *
-	 *  cntPics is increased with one everytime a frame is
-	 *  succesfully captured in the run() method.
-	 */
-	private int cntPics;
-	/** cntMissed is used to count how many frames we've missed.
-	 *  This parameter is set to 0 in the init() method, and increased
-	 *  with each missed frame in the run() method.
-	 */
-	private int cntMissed;
-	/** lastFrame is a byte array used to store the encoded frame
-	 *  that is used as the first and the last frame of the movie.
-	 *
-	 *  lastFrame is initiated in the init() method, and is written to
-	 *  the OutputStream once in the init() method, and once at the 
-	 *  end of the run() method.
-	 */
-	private byte[] lastFrame;
-	/** Keeps track of the size of the ByteArrayOutputStream
-	 *  used to store frames in memory. oldSize is used in the 
-	 *  run() method to calculate the exact size of each new frame.
-	 */
-	private int oldSize = 0;
-	/**	sizes is used to store sizes of all captured frames. */
+	// Usado para sincronização de áudio e vídeo
+	// Alterado para true quando inicia a gravação do áudio
+	// e para false quando termina a gravação.
+	public boolean gravandoAudio = false;
+	// Incrementado a cada frame capturado no método run()
+	private int contImagens;
+	// Incrementado a cada frame perdido
+	private int contPerdidos;
+	// Guarda o primeiro e o último frame do vídeo (imagens vazias).
+	// Assim temos certeza de que se o primeiro frame real for perdido,
+	// não teremos que preencher o espaço dele com frames que nunca existiram
+	private byte[] priUltFrame;
+	// Captura o tamanho do ByteArrayOutputStream usado para guardar frames na
+	// memória. É usado no método run() para calcular o tamanho de cada frame.
+	private int tamanho = 0;
+	// Guarda o tamanho de todos os frames capturados
 	private int[] sizes;
-	/**	missedFrames is used to store number of all missedFrames. */
-	private int[] missedFrames;
-	//	This is where all captured and encoded frames are stored in memory.
-	private ByteArrayOutputStream jpgBytesII;
-	private FileOutputStream fileBytes;
-	private BufferedOutputStream fileBuffer;
-	private DataOutputStream jpgBytes;
-	/**	Used directly as output file, this file is used to save
-	 *	frames into after recording is finished, in the run() method. */
-	private File dumpFile;
-	/**	Used in the run() method to keep capture in sync.
-	 *	syncTime can be set needs to be set in the setSyncTime() method.
-	 *	This must be done before recording is started. */
-	double syncTime;
-	/**	Used in the run() method to keep capture in sync. */
-	private long currentTime;
-	/**	Variables used by many methods */
-	/** myRuntime is used to check available memory. */
-	private Runtime myRuntime;
-	/**	The robot used for screen caputure. */
+	// Guarda o nº de todos os frames perdidos
+	private int[] framesPerdidos;
+	// Isto é onde todos os frames encodados são gravados na memória
+	private DataOutputStream bytesJPG;
+	private ByteArrayOutputStream bytesJPG_2;
+	private FileOutputStream bytesArquivo;
+	private BufferedOutputStream bufferArquivo;
+	// Usado diretamente como arquivo de saída. Arquivo usado para salvar os
+	// frames depois que a gravação terminou no método run()
+	private File despejo;
+	// Usado no método run() para manter a captura em sincronia
+	double tempoSinc;
+	// Usado no método run() para manter a captura em sincronia
+	private long tempoAtual;
+	// Usado para verificar a memória disponível
+	private Runtime runtime;
+	// Usado para fazer a captura das imagens
 	private Robot robot;
-	/**	The BufferedImage used to store captured frames. */
-	private BufferedImage image;
-	private Graphics2D imageGraphics;
-	/**	Used to get the fps value for method startDumper.
-	 *	Also used to calculate time in method setFps. */
+	// Usado para guardar a captura dos frames
+	private BufferedImage imagem;
+	private Graphics2D graphics2D;
+	// Frames por segundo
 	private int fps;
-	/**	The average size of captured and encoded imagens.
-	 *	Used to get an estimate of the number of frames
-	 *	that can be stored in memory. */
-	private double avgSize = Double.MAX_VALUE;
-	/**	The Encoder, used to
-	 *	encode captured imagens. */
+	// Encoder usado para encodar as imagens capturadas
 	private JPEGImageEncoder encoder;
-	/**	The Encoder parameters, used to
-	 *	encode captured imagens. */
+	// Parâmetros do encoder para encodar as imagens
 	private JPEGEncodeParam param;
 	/** This object is used to reload the imagens
 	 *  from the file they are saved in, and then
 	 *  supply them to the JpegImagesToMovieMod class.
 	 *  A new imagens object is created and set up
-	 *  at the end of the main recording thread
+	 *  at the end of the main gravando thread
 	 *  (in the run() method). When the encode() method
 	 *  is called by the user, it takes this object and
 	 *  passes it on to the startDumper() method.
@@ -222,62 +101,6 @@ public class VideoNegocio extends Thread {
 	 *  to be updated.
 	 */
 	protected Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	/** The speed with which the retangulo is currently moving, if we are
-	 *  tracking the mouse position.
-	 */
-	private int moveSpeed = 0;
-	/** The direction in which the retangulo is currently moving, if we are
-	 *  tracking the mouse position. The only reason this object is global
-	 *  is to always have access to the Direction.normalize() method. This
-	 *  object is used in capRectMover.
-	 */
-	private Direction moveDir = new Direction(0, 0);
-
-	/** A class that can hold a direction in a two-dimensional coordinate
-	 *  system. The x and y components of the direction are stored as
-	 *  double values. The class also has a method for normalizing a direction
-	 *  represented by two integer components.
-	 *
-	 *  This class is used to move the retangulo in the capRectMover() and
-	 *  getDirectionEdgeIntersection() methods.
-	 */
-	private class Direction {
-
-		/** The x component of the direction. */
-		public double x;
-		/** The y component of the direction. */
-		public double y;
-
-		/** A constructor creating a Direction object with the
-		 *  given x and y components.
-		 *
-		 *  @param  x   The x-component of the Direction.
-		 *  @param  y   The y-component of the Direction.
-		 */
-		Direction(double x, double y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		/** A method to take two integer components, and return a normalized
-		 *  Direction.
-		 *
-		 *  @param  x   The x-component of the direction.
-		 *  @param  y   The y-component of the direction.
-		 *
-		 *  @return     A new Direction object holding a normalized representation
-		 *              of the given direction. The direction (1, 0) is returned
-		 *              if the arguments to this method were both 0.
-		 */
-		public Direction normalize(int x, int y) {
-			double length = Math.sqrt(x * x + y * y);
-			if (0 < length) {
-				return new Direction(x / length, y / length);
-			} else {
-				return new Direction(1, 0);
-			}
-		}
-	}
 
 	/** Constructor for VideoNegocio.
 	 *  Test encoding to get a good
@@ -323,22 +146,22 @@ public class VideoNegocio extends Thread {
 	/**	Init or reinit the encoder.
 	 * This needs to be done everytime the amount of memory
 	 * needed has changed, the sizes of the frames have changed,
-	 * or just between every recording.
+	 * or just between every gravando.
 	 */
 	public void init() throws IOException {
-		initing = true;
-		jpgBytes = null;
-		fileBuffer = null;
-		fileBytes = null;
+		inicializando = true;
+		bytesJPG = null;
+		bufferArquivo = null;
+		bytesArquivo = null;
 		/** This is an array for storing image data
 		 *  directly into memory. It is only used in
 		 *  The initialization process.
 		 */
-		jpgBytesII = new ByteArrayOutputStream();
+		bytesJPG_2 = new ByteArrayOutputStream();
 		/** Clear memory. */
 		encoder = null;
 		sizes = null;
-		missedFrames = null;
+		framesPerdidos = null;
 		System.gc();
 		/** trying to allocate all available memory except 20MB
 		 *  that are saved for performance purposes. If this fails,
@@ -348,37 +171,37 @@ public class VideoNegocio extends Thread {
 		 *  totalMemory = the memory that we have reserved so far.
 		 *  freeMemory = the part of totalMemory that is not used.
 		 */
-		myRuntime = Runtime.getRuntime();
-		Double convert = new Double(myRuntime.maxMemory()
-				- myRuntime.totalMemory() + myRuntime.freeMemory() - 2097152 * 10);
+		runtime = Runtime.getRuntime();
+		Double convert = new Double(runtime.maxMemory()
+				- runtime.totalMemory() + runtime.freeMemory() - 2097152 * 10);
 //		System.out.println("Memory attempt 1: " + convert);
 		if (convert.intValue() < 0) {
-			convert = new Double((myRuntime.maxMemory()
-					- myRuntime.totalMemory() + myRuntime.freeMemory()) * 0.5d);
+			convert = new Double((runtime.maxMemory()
+					- runtime.totalMemory() + runtime.freeMemory()) * 0.5d);
 		}
 //		System.out.println("Memory attempt 2: " + convert);
 		/** Set up a save file for encoded jpg imagens.
 		 *  This file is then used directly as output.
 		 */
-		dumpFile = new File("dumpFile" + cntMovies);
+		despejo = new File("dumpFile" + contMov);
 		/** This is just a safety check to see that the
 		 *  file can really be written too. */
 //        while (dumpFile.exists() && !dumpFile.delete()) {
 //            dumpFile = mySaveQuery.getNextFile(dumpFile);
 		//       }
-		dumpFile.deleteOnExit();
+		despejo.deleteOnExit();
 		/** Allocate memory for frame storage in a file
 		 *  buffer for the output file.
 		 */
-		fileBytes = new FileOutputStream(dumpFile);
+		bytesArquivo = new FileOutputStream(despejo);
 //		System.out.println("filebuffer should use: "
 //				+ (convert.intValue() / 2));
-		fileBuffer = new BufferedOutputStream(fileBytes,
+		bufferArquivo = new BufferedOutputStream(bytesArquivo,
 				(convert.intValue() / 2));
 		/** jpgBytes will be the output stream that we write
 		 *  to later on in the program.
 		 */
-		jpgBytes = new DataOutputStream(fileBuffer);
+		bytesJPG = new DataOutputStream(bufferArquivo);
 		/** Figure out how many integers we can hold in the
 		 *  remaining memory. An integer takes 4B, and we will
 		 *  have 2 arrays of integers. We don't want to fill the
@@ -394,7 +217,7 @@ public class VideoNegocio extends Thread {
 		 *  262144 integers, which would be enough for
 		 *  2h25m38s of film at 30 FPS.
 		 */
-		maxNOPics = (int) (convert.intValue() / 24);
+		NumMaxImg = (int) (convert.intValue() / 24);
 //		System.out.println("Memory after filebuffer: "
 //				+ (myRuntime.maxMemory() - myRuntime.totalMemory()
 //				+ myRuntime.freeMemory()));
@@ -406,39 +229,39 @@ public class VideoNegocio extends Thread {
 		 *  First we take an "average (=random)" image for the method
 		 *  encoder.getDefaultJPEGEncodeParam(image) below.
 		 */
-		image = robot.createScreenCapture(retangulo);
+		imagem = robot.createScreenCapture(retangulo);
 		/** Set the encoder to the OutputStream that stores in memory. */
-		encoder = JPEGCodec.createJPEGEncoder(jpgBytesII);
+		encoder = JPEGCodec.createJPEGEncoder(bytesJPG_2);
 		/** Get an "average" JPEGEncodeParam */
-		param = encoder.getDefaultJPEGEncodeParam(image);
+		param = encoder.getDefaultJPEGEncodeParam(imagem);
 		/** Set encoding quality */
-		param.setQuality(encQuality, false);
+		param.setQuality(qualidadeEnc, false);
 		encoder.setJPEGEncodeParam(param);
 		/** Store an empty image in the first frame of the film.
 		 *  Then keep that jpg image in memory to also be used as the
 		 *  last frame in the film as well
 		 */
-		image = new BufferedImage(image.getWidth(),
-				image.getHeight(),
-				image.getType());
-		encoder.encode(image);
-		lastFrame = jpgBytesII.toByteArray();
+		imagem = new BufferedImage(imagem.getWidth(),
+				imagem.getHeight(),
+				imagem.getType());
+		encoder.encode(imagem);
+		priUltFrame = bytesJPG_2.toByteArray();
 		/** Clear this output stream, which we will not use for 
 		 *  anything more than this initialization procedure, 
 		 *  to save some memory */
-		jpgBytesII = null;
+		bytesJPG_2 = null;
 		/** Change the encoder to store encoded image in the
 		 *  buffered FileOutputStream.
 		 *
 		 *  First we take another "average" screenshot.
 		 */
-		image = robot.createScreenCapture(retangulo);
+		imagem = robot.createScreenCapture(retangulo);
 		/** Set the encoder to the FileOutputStream */
-		encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
+		encoder = JPEGCodec.createJPEGEncoder(bytesJPG);
 		/** Get an "average" JPEGEncodeParam */
-		param = encoder.getDefaultJPEGEncodeParam(image);
+		param = encoder.getDefaultJPEGEncodeParam(imagem);
 		/** Set encoding quality */
-		param.setQuality(encQuality, false);
+		param.setQuality(qualidadeEnc, false);
 		encoder.setJPEGEncodeParam(param);
 		/** We write the black frame into the outputstream,
 		 *  since we need at least one frame to prevent the
@@ -446,12 +269,12 @@ public class VideoNegocio extends Thread {
 		 *  frame, and then try to fill it by repeating a
 		 *  frame that never existed.
 		 */
-		jpgBytes.write(lastFrame, 0, lastFrame.length);
+		bytesJPG.write(priUltFrame, 0, priUltFrame.length);
 		/** Allocate int Arrays for storing image sizes,
 		 *  and missed imagens. Setup remaining variables.
 		 */
 //		System.out.println("arrays should use (in total): "
-//				+ (maxNOPics * 8));
+//				+ (NumMaxImg * 8));
 		boolean memError = true;
 		/** Allocate an integer array for storing the sizes of
 		 *  each recorded image. Allocate an additional array
@@ -474,14 +297,14 @@ public class VideoNegocio extends Thread {
 		while (memError) {
 			memError = false;
 			try {
-				sizes = new int[maxNOPics];
+				sizes = new int[NumMaxImg];
 				//	Allow as many missed frames.
-				missedFrames = new int[maxNOPics];
+				framesPerdidos = new int[NumMaxImg];
 			} catch (OutOfMemoryError oe) {
 //				System.err.println("Unexpected memory error in ScreenGrabber.init()");
 //				System.err.println("Trying to allocate smaller arrays.");
 				memError = true;
-				maxNOPics /= 2;
+				NumMaxImg /= 2;
 			}
 		}
 //		System.out.println("Memory after arrays: "
@@ -491,32 +314,30 @@ public class VideoNegocio extends Thread {
 		 *  missedFrames must contain a value. If a frame is missed,
 		 *  this value will be overwritten.
 		 */
-		missedFrames[0] = maxNOPics + 1;
+		framesPerdidos[0] = NumMaxImg + 1;
 		/** One frame is already caught, setup size for that frame */
-		sizes[0] = jpgBytes.size();
+		sizes[0] = bytesJPG.size();
 		/** Setup size counter. */
-		oldSize = sizes[0];
+		tamanho = sizes[0];
 		/** Setup frame counter */
-		cntPics = 1;
-		cntMissed = 0;
-		unRecoverableError = false;
-		error = false;
+		contImagens = 1;
+		contPerdidos = 0;
 		/** These last two lines are for waking up the
 		 *  run method, in the unlikely event that it
 		 *  is waiting on init to finish.
 		 */
-		initing = false;
+		inicializando = false;
 		wakeUp();
 	}
 
 	/**	Set the fps values.
 	 *
-	 *  @param  fps The recording fps.
+	 *  @param  fps The gravando fps.
 	 *  @param  playbackFps The playback fps.
 	 */
 	public void setFps(int fps, int playbackFps) {
 		this.fps = playbackFps;
-		time = 1000d / fps;
+		tempo = 1000d / fps;
 //        mySnapShot.setFps(fps); // VER ISSO AQUI!!!!!!!
 	}
 
@@ -557,220 +378,25 @@ public class VideoNegocio extends Thread {
 		return polly;
 	}
 
-	/** This method gives the Point on the intersection between
-	 *  the bounding edge of a Rectangle, and a line going from
-	 *  the center of the Rectangle in direction (xDir, yDir).
-	 *
-	 *  The position returned by this method is used by the
-	 *  capRectMover() method to check if the distance between
-	 *  the mouse pointer and the center of the retangulo is big enough
-	 *  to start moving the retangulo.
-	 *
-	 *  @param  rect    A Rectangle.
-	 *  @param  dir     A Direction object representing the direction
-	 *                  from the center of rect to the mouse pointer.
-	 *
-	 *  @return     A point representing the position of the intersection
-	 *              between the bounding edge of the rectangle and the line
-	 *              from the center of the rectangle in the direction dir.
-	 */
-	private Point getDirectionEdgeIntersection(Rectangle rect, Direction dir) {
-		/** The x position of the vertical side of the Rectangle which is
-		 *  closest to the intersection.
-		 */
-		int xSide;
-		/** The y position of the horizontal side of the Rectangle which is
-		 *  closest to the intersection.
-		 */
-		int ySide;
-
-		/** The length of the line going from the center of the
-		 *  rectangle to the x-edge.
-		 */
-		double xLineLength = screenSize.width;
-		/** The length of the line going from the center of the
-		 *  rectangle to the y-edge.
-		 */
-		double yLineLength = screenSize.height;
-
-		/** The length of the shortest of the two lines
-		 *  xLineLength and yLineLength.
-		 */
-		double lineLength;
-
-		/** The x-coordinate of the intersection. */
-		int xIntersection;
-
-		/** The y-coordinate of the intersection. */
-		int yIntersection;
-
-		/** Check which of the vertical sides of the rectangle that is
-		 *  closest to the intersection.
-		 */
-		if (dir.x < 0) {
-			xSide = rect.x;
-		} else if (0 < dir.x) {
-			xSide = rect.x + rect.width;
-		} else {
-			/** The direction has no x-component. */
-			xSide = -1;
-		}
-
-		/** Check which of the horizontal sides of the rectangle that is
-		 *  closest to the intersection.
-		 */
-		if (dir.y < 0) {
-			ySide = rect.y;
-		} else if (0 < dir.y) {
-			ySide = rect.y + rect.height;
-		} else {
-			/** The direction has no y-component. */
-			ySide = -1;
-		}
-
-		/** Figure out the distance from the center of the rectangle,
-		 *  to the intersection between a line going straight from the
-		 *  center of the rectangle, and a line following the vertical
-		 *  side of the rectangle.
-		 */
-		if (0 <= xSide) {
-			xLineLength = (xSide - rect.getCenterX()) / dir.x;
-		}
-
-		/** Figure out the distance from the center of the rectangle,
-		 *  to the intersection between a line going straight from the
-		 *  center of the rectangle, and a line following the horizontal
-		 *  side of the rectangle.
-		 */
-		if (0 <= ySide) {
-			yLineLength = (ySide - rect.getCenterY()) / dir.y;
-		}
-
-		/** The shortest one of the two distances xLineLength and yLineLength,
-		 *  will be the distance from the center of the rectangle to the
-		 *  edge of the rectangle, in the given direction.
-		 */
-		lineLength = Math.min(xLineLength, yLineLength);
-
-		/** Calculate and return the x and y coordinates of the intersection. */
-		xIntersection = (int) (rect.getCenterX() + lineLength * dir.x);
-		yIntersection = (int) (rect.getCenterY() + lineLength * dir.y);
-		return new Point(xIntersection, yIntersection);
-	}
-
-	/** This method handles the movement of the retangulo. If we're
-	 *  tracking the mouse pointer, this method is called from the
-	 *  run() method once every time a frame is recorded.
-	 *
-	 *  See the comments to the parameter moveLimit, for a clarification
-	 *  on how the movement works.
-	 *
-	 *  @param realMousePos A point representing the position of
-	 *                      the mouse pointer.
-	 */
-	private void capRectMover(Point realMousePos) {
-		/** Used to measure the distance between the center of the
-		 *  retangulo, and the mouse pointer.
-		 */
-		int distance;
-
-		/** Figure out where the retangulo would be positioned if it
-		 *  was centered around the mouse pointer.
-		 */
-		Point moveTarget = new Point(realMousePos.x - retangulo.width / 2,
-				realMousePos.y - retangulo.height / 2);
-
-		/** Are we in the process of moving the retangulo right now? */
-		if (moveSpeed != 0) {
-			/** We're moving. */
-			/** Make sure we don't move out of the screen. */
-			if (moveTarget.x < 0) {
-				moveTarget.x = 0;
-			}
-			if (screenSize.width < retangulo.width + moveTarget.x) {
-				moveTarget.x = screenSize.width - retangulo.width;
-			}
-			if (moveTarget.y < 0) {
-				moveTarget.y = 0;
-			}
-			if (screenSize.height < retangulo.height + moveTarget.y) {
-				moveTarget.y = screenSize.height - retangulo.height;
-			}
-
-			/** Figure out how far we have to move before we reach our target. */
-			distance = (int) moveTarget.distance(retangulo.getLocation());
-
-			/** Figure out in which direction we are moving. */
-			moveDir = moveDir.normalize(moveTarget.x - retangulo.x,
-					moveTarget.y - retangulo.y);
-
-			/** Check if we should stop moving */
-			if ((moveSpeed <= 0) || (distance <= moveSpeed)) {
-				/** Stop moving. */
-				moveSpeed = 0;
-				distance = 0;
-				retangulo.setLocation(moveTarget);
-			} else {
-				/** Move to the new position */
-				retangulo.translate((int) (moveDir.x * moveSpeed),
-						(int) (moveDir.y * moveSpeed));
-				/** Change the speed of the movement based on how close
-				 *  we are to our target.
-				 */
-				if (distance <= (0.5 * moveSpeed * moveSpeed / acceleration)) {
-					moveSpeed -= acceleration;
-				} else {
-					moveSpeed += acceleration;
-				}
-			}
-		}
-
-		/** Is the retangulo stationary right now? */
-		if (moveSpeed == 0) {
-			/** The retangulo is not moving. */
-			/** Check the distance between the mouse pointer and the center
-			 *  of the retangulo.
-			 */
-			distance = (int) moveTarget.distance(retangulo.getLocation());
-
-			/** Figure out the direction from the center of the retangulo to
-			 *  the mouse pointer.
-			 */
-			moveDir = moveDir.normalize(moveTarget.x - retangulo.x,
-					moveTarget.y - retangulo.y);
-
-			/** Check if we should start moving. */
-			double compDistance =
-					getDirectionEdgeIntersection(retangulo, moveDir).distance(
-					retangulo.getCenterX(), retangulo.getCenterY());
-			double compValue = distance / compDistance;
-			if (moveLimit < compValue) {
-
-				/** We should start moving. */
-				moveSpeed += acceleration;
-			}
-		}
-	}
-
-	/**	Set the syncTime for the run() method
+	/**	Set the tempoSinc for the run() method
 	 * This MUST be done before wakeUp() is called
-	 * to start the recording.
+	 * to start the gravando.
 	 *
-	 *  @param  syncTime    A parameter determining how many millis
+	 *  @param  tempoSinc    A parameter determining how many millis
 	 *                      behind the fps the capturing can fall,
 	 *                      before a frame is doubled to compensate.
 	 */
 	public void setSyncTime(long syncTime) {
-		this.syncTime = syncTime;
+		this.tempoSinc = syncTime;
 	}
 
-	/** Test the Robot cap time per frame.
+	/** Test the Robot cap tempo per frame.
 	 *  Capture iterations frames in the loop,
 	 *  and calculate and return an average.
 	 *  This method is called by the speedTest()
 	 *  method in Run_KRUT.
 	 *
-	 *  @return The average capture time in milliseconds.
+	 *  @return The average capture tempo in milliseconds.
 	 */
 	public double testCapTime() throws IOException {
 		long syncTime;
@@ -780,19 +406,19 @@ public class VideoNegocio extends Thread {
 			for (int cnt = 0; cnt < iterations; cnt++) {
 				syncTime = System.currentTimeMillis();
 				// image is a class BufferedImage.
-				image = robot.createScreenCapture(retangulo);
+				imagem = robot.createScreenCapture(retangulo);
 				avgTime = System.currentTimeMillis() - syncTime + avgTime;
 			}
 			avgTime /= iterations;
 			return avgTime;
 		} catch (OutOfMemoryError oe) {
-//			System.err.println("Unable to perform cap time test.");
+//			System.err.println("Unable to perform cap tempo test.");
 //			System.err.println(oe);
 			return Double.MAX_VALUE;
 		}
 	}
 
-	/**	Test the average encoder encoding size and time.
+	/**	Test the average encoder encoding size and tempo.
 	 * Encode iterations frames in the loop,
 	 * and calculate and return average values of
 	 * speed and size. avgSize is also set
@@ -813,72 +439,44 @@ public class VideoNegocio extends Thread {
 		try {
 			//	Capture one image in case there is none
 			//	in memory. image is a class BufferedImage.
-			image = robot.createScreenCapture(retangulo);
+			imagem = robot.createScreenCapture(retangulo);
 			//	Initialize a new JPEGEncoder for local jpgBytes
 			encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
-			param = encoder.getDefaultJPEGEncodeParam(image);
-			param.setQuality(encQuality, false);
+			param = encoder.getDefaultJPEGEncodeParam(imagem);
+			param.setQuality(qualidadeEnc, false);
 			encoder.setJPEGEncodeParam(param);
 			// Encode one image to get a very rough
 			// estimate of the average size
 			// retangulo is set in the constructor.
 			// image is a class BufferedImage.
-			encoder.encode(image);
+			encoder.encode(imagem);
 			avgSize = jpgBytes.size();
 			// Reserve twice the average size for each
 			// frame. This is done for speed. Then make
 			// a new JPEGEncoder for this new jpgBytes.
 			jpgBytes = new ByteArrayOutputStream((int) avgSize * iterations * 2);
 			encoder = JPEGCodec.createJPEGEncoder(jpgBytes);
-			param = encoder.getDefaultJPEGEncodeParam(image);
-			param.setQuality(encQuality, false);
+			param = encoder.getDefaultJPEGEncodeParam(imagem);
+			param.setQuality(qualidadeEnc, false);
 			encoder.setJPEGEncodeParam(param);
 			for (int cnt = 0; cnt < iterations; cnt++) {
 				syncTime = System.currentTimeMillis();
-				encoder.encode(image);
+				encoder.encode(imagem);
 				avgEncTime = System.currentTimeMillis() - syncTime + avgEncTime;
 			}
 			avgSize = jpgBytes.size() / iterations;
 			avgEncTime /= iterations;
-			// Set class variable avgSize.
-			this.avgSize = avgSize;
 			// Return values.
 			double[] values = new double[2];
 			values[0] = avgSize;
 			values[1] = avgEncTime;
 			return values;
 		} catch (OutOfMemoryError oe) {
-//			System.err.println("Unable to perform size and encoding time test.");
+//			System.err.println("Unable to perform size and encoding tempo test.");
 //			System.err.println(oe);
 			double[] errors = {Double.MAX_VALUE, Double.MAX_VALUE};
 			return errors;
 		}
-	}
-
-	/**	Take a snapshot of the selected screencap area
-	 *  and save to a new screenshot file. Overwrites any
-	 *  prior screenshot file with the same name.
-	 *  (In a normal case, the Run_KRUT class that calls
-	 *  this method from Run_KRUT.snapaction() will be in
-	 *  control of whether files should be overwritten or not,
-	 *  and make sure that the global parameter screenshotFile
-	 *  has a correct filename.)
-	 */
-	public void snapshot() {
-		try {
-			FileOutputStream outFile = new FileOutputStream(screenshotFile);
-			// image is a BufferedImage.
-			image = robot.createScreenCapture(retangulo);
-			JPEGImageEncoder snapEncoder = JPEGCodec.createJPEGEncoder(outFile);
-			snapEncoder.setJPEGEncodeParam(param);
-			snapEncoder.encode(image);
-			outFile.close();
-		} catch (IOException e) {
-//			System.out.println(e);
-		} catch (OutOfMemoryError oe) {
-//			System.err.println(oe);
-		}
-
 	}
 
 	/**	Starts a new JpegImagesToMovie, and waits for it to finish
@@ -910,14 +508,8 @@ public class VideoNegocio extends Thread {
 			dumper.start();
 			dumper.waitFor();
 		} catch (Exception e) {
-			// unRecoverableError can be used to check if
-			// making the movie succeded. This is used in
-			// stead of returning a value, in case one wants to
-			// run the method in a separate thread.
-			unRecoverableError = true;
 //			System.err.println(e);
 		} catch (OutOfMemoryError o) {
-			unRecoverableError = true;
 //			System.out.println(o);
 		}
 	}
@@ -925,10 +517,10 @@ public class VideoNegocio extends Thread {
 	/** Used to sync video.
 	 * Users may call this method, and are then woken
 	 * once when the last frame is captured, and once more
-	 * when the recording is completely finished.
+	 * when the gravando is completely finished.
 	 *
-	 * The recording and running flags must be checked in order
-	 * to safely determine if recording is running upon return
+	 * The gravando and executando flags must be checked in order
+	 * to safely determine if gravando is executando upon return
 	 * from this method.
 	 *
 	 * The VideoNegocio itself calls this method from run(), and
@@ -979,18 +571,19 @@ public class VideoNegocio extends Thread {
 	}
 
 	/** Main working method.
-	 *  It captures a frame, and sleeps for the amount of time
+	 *  It captures a frame, and sleeps for the amount of tempo
 	 *  left until the next frame should be captured.
 	 *	If capturing the frame took longer than fps would allow,
 	 *	the frame is marked as missed, and then copied the number
 	 *  of times required to get back in sync.
 	 *	The method ends with a call to startDumper(), where a temp
 	 *	mov file is made, then this method finally changes the
-	 *  running parameter, and makes one last call to wakeUp().
-	 *	The recording is started when the user sets the naoTerminado
+	 *  executando parameter, and makes one last call to wakeUp().
+	 *	The gravando is started when the user sets the naoTerminado
 	 *	flag to true, and then calls VideoNegocio.wakeUp(). It is
 	 *	stopped when the user sets the naoTerminado flag to false.
 	 */
+	@Override
 	public void run() {
 		/** The polygon to draw the mouse cursor into */
 		Polygon mousePointer;
@@ -1002,45 +595,35 @@ public class VideoNegocio extends Thread {
 			try {
 				/** Make sure the grabber is inited. */
 				init();
-				/** Wait for recording to start. */
+				/** Wait for gravando to start. */
 				while (!naoTerminado) {
 					hold();
 				}
 				/** Safety check */
-				while (initing) {
+				while (inicializando) {
 					hold();
 				}
 				/** 2 Flags that are readable by the user. */
-				recording = true;
-				running = true;
-				/** Change the acceleration of the retangulo in case we are
-				 *  tracking the mouse pointer.
-				 */
-				acceleration = 75 / fps;
-				/** Main recording loop. naoTerminado is set to false
-				 *  by user to stop recording. */
+				gravando = true;
+				executando = true;
+				/** Main gravando loop. naoTerminado is set to false
+				 *  by user to stop gravando. */
 				while (naoTerminado) {
 					/** Get location of mouse. */
 					mousePos = MouseInfo.getPointerInfo().getLocation();
-					/** If we are tracking the mouse we should update
-					 *  the position of the retangulo.
-					 */
-					if (followMouse) {
-						capRectMover(mousePos);
-					}
 					/** This is where we capture the image. */
-					image = robot.createScreenCapture(retangulo);
+					imagem = robot.createScreenCapture(retangulo);
 					/** Add mouse cursor to image.  */
-					if (getMouse) {
+					if (mostraMouse) {
 						/** Get graphics to paint in. */
-						imageGraphics = image.createGraphics();
+						graphics2D = imagem.createGraphics();
 						/** Get the cursor to draw. */
 						mousePointer = createMouse(mousePos);
 						/** Draw cursor. */
-						imageGraphics.setColor(Color.WHITE);
-						imageGraphics.fill(mousePointer);
-						imageGraphics.setColor(Color.DARK_GRAY);
-						imageGraphics.draw(mousePointer);
+						graphics2D.setColor(Color.WHITE);
+						graphics2D.fill(mousePointer);
+						graphics2D.setColor(Color.DARK_GRAY);
+						graphics2D.draw(mousePointer);
 					}
 					/** If the preview window is visible, we should
 					 *  update the image showing there.
@@ -1049,66 +632,63 @@ public class VideoNegocio extends Thread {
 //                        mySnapShot.updatePreviewImage(image);
 //                    }
 					/** Encode a jpg directly to the OutputStream. */
-					encoder.encode(image);
+					encoder.encode(imagem);
 //                    jpgBytes.write(this.bufferedImageToByteArray(image));
 					/** Save the size of the jpg in a separate array */
-					sizes[cntPics] = jpgBytes.size() - oldSize;
-					oldSize += sizes[cntPics];
+					sizes[contImagens] = bytesJPG.size() - tamanho;
+					tamanho += sizes[contImagens];
 					/** The next part is used to stay in sync. */
-					syncTime += time;
-					currentTime = System.currentTimeMillis();
-					while (syncTime < currentTime) {
-						missedFrames[cntMissed++] = cntPics;
-						syncTime += time;
+					tempoSinc += tempo;
+					tempoAtual = System.currentTimeMillis();
+					while (tempoSinc < tempoAtual) {
+						framesPerdidos[contPerdidos++] = contImagens;
+						tempoSinc += tempo;
 					}
-					cntPics++;
+					contImagens++;
 					/** The loop is finished. */
-					Thread.sleep((long) syncTime - currentTime);
+					Thread.sleep((long) tempoSinc - tempoAtual);
 				}
 			} catch (OutOfMemoryError o) {
-				error = true;
-				Runtime myRuntime = Runtime.getRuntime();
-				long mem = myRuntime.maxMemory() - myRuntime.totalMemory()
-						+ myRuntime.freeMemory();
-//				System.out.println("Interrupted! Memory to low");
-//				System.out.println("Memory: " + mem);
+				Runtime runtime = Runtime.getRuntime();
+				long mem = runtime.maxMemory() - runtime.totalMemory()
+						+ runtime.freeMemory();
+//				System.out.println("Interrompido por falta de memória");
+//				System.out.println("Memória: " + mem);
 //				System.out.println(o);
 			} catch (Exception e) {
-				error = true;
-				Runtime myRuntime = Runtime.getRuntime();
-				long mem = myRuntime.maxMemory() - myRuntime.totalMemory()
-						+ myRuntime.freeMemory();
-//				System.out.println("Interrupted! Possibly max number of frames"
-//						+ " exceeded, or Memory to low");
-//				System.out.println("Max number of pics: " + maxNOPics);
-//				System.out.println("Memory: " + mem);
+				Runtime runtime = Runtime.getRuntime();
+				long mem = runtime.maxMemory() - runtime.totalMemory()
+						+ runtime.freeMemory();
+//				System.out.println("Interrompido por limite de frames atingido ou falta de memória");
+//				System.out.println("Número máximo de imagens: " + NumMaxImg);
+//				System.out.println("Memória: " + mem);
 //				System.out.println(e);
 			} finally {
-				/** We're finished recording video. */
+				/** We're finished gravando video. */
 				try {
-					cntMovies++;
+					contMov++;
 					/** Make sure the audiotrack is at least 2s long. A
 					 *  security measure to prevent crashes from Merge class. */
-					if (((cntPics + cntMissed) * time) < 2000) {
+					if (((contImagens + contPerdidos) * tempo) < 2000) {
 						int delayCounter = 0;
-						while (((cntPics + cntMissed + delayCounter++) * time) < 2000) {
-							Thread.sleep((long) time);
+						while (((contImagens + contPerdidos + delayCounter++) * tempo) < 2000) {
+							Thread.sleep((long) tempo);
 						}
 					}
 					/** Make sure the film is at least 2s long. A
 					 *  security measure to prevent crashes from Merge class. */
-					while (((cntPics + cntMissed) * time) < 2000) {
-						missedFrames[cntMissed++] = cntPics;
+					while (((contImagens + contPerdidos) * tempo) < 2000) {
+						framesPerdidos[contPerdidos++] = contImagens;
 					}
 					/** Write a final frame, and close the file for temporary
 					 *  image data. */
 					try {
-						jpgBytes.write(lastFrame, 0, lastFrame.length);
+						bytesJPG.write(priUltFrame, 0, priUltFrame.length);
 					} catch (IOException e) {
 //						System.err.println(e);
 					}
-					sizes[cntPics] = lastFrame.length;
-					/** At this point we are done recording.
+					sizes[contImagens] = priUltFrame.length;
+					/** At this point we are done gravando.
 					 *  We create a new DataList object for this movie.
 					 *  The DataList object acts as an input source
 					 *  for the JpegImagesToMovieMod class.
@@ -1116,24 +696,24 @@ public class VideoNegocio extends Thread {
 					 *  that the encode() method has access to it as well.
 					 */
 					imagens = new ListaDeDados();
-					imagens.totImg = cntPics;
+					imagens.totImg = contImagens;
 					imagens.tamanhoImagens = sizes;
-					imagens.framesPerdidos = missedFrames;
-					imagens.setArquivo(dumpFile);
-					recording = false;
+					imagens.framesPerdidos = framesPerdidos;
+					imagens.setArquivo(despejo);
+					gravando = false;
 					/** wake up users waiting to sync audio. */
 					wakeUp();
 					/** Recording is now finished, encoding starts
 					 *  when someone calls the encode() method.
 					 *  In case there is a thread waiting to stop 
-					 *  Audio recording, this thread will now hold,
+					 *  Audio gravando, this thread will now hold,
 					 *  briefly before doing anything else. This is
 					 *  done only for maximum sync between audio and
-					 *  video. After audio recording is stopped, this
+					 *  video. After audio gravando is stopped, this
 					 *  thread will loop back to the top of this
 					 *  method and call the init() method again.
 					 */
-					while (audioRecording) {
+					while (gravandoAudio) {
 						hold();
 					}
 				} catch (Exception e) {
@@ -1165,11 +745,11 @@ public class VideoNegocio extends Thread {
 		startDumper(imagens);
 		/** We return here when we are done encoding,
 		 *  or when the encoding has been interrupted.
-		 *  Now we can set the running flag, to tell
+		 *  Now we can set the executando flag, to tell
 		 *  the user waiting to merge audio and video
 		 *  that we are ready.
 		 */
-		running = false;
+		executando = false;
 		/** Try to delete the file that we used as a
 		 *  data source for the movie (the old dumpfile).
 		 */
@@ -1184,8 +764,8 @@ public class VideoNegocio extends Thread {
 		imagens.tamanhoImagens = null;
 		imagens.framesPerdidos = null;
 		try {
-			initing = true;
-			if (!recording) {
+			inicializando = true;
+			if (!gravando) {
 				init();
 			}
 		} catch (Exception e) {
@@ -1195,7 +775,7 @@ public class VideoNegocio extends Thread {
 		 *  again, and users waiting to merge the encoded
 		 *  movie file.
 		 */
-		initing = false;
+		inicializando = false;
 		wakeUp();
 	}
 }

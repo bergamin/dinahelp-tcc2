@@ -12,9 +12,9 @@ public class ConfirmaVideoGUI extends javax.swing.JFrame {
 	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	public ConfirmaVideoGUI() {
 		initComponents();
-		while (VideoGUI.video.running) { /* não faz nada enquanto estiver rodando o encode */ }
+		while (VideoGUI.video.executando) { /* não faz nada enquanto estiver executando o encode */ }
 		new CopiaArquivos(VideoGUI.video.arquivoTemp, InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
-		InicialGUI.aProjetos.addFilho(VideoGUI.tfNomeVideo.getText()+".mov");
+		InicialGUI.aProjetos.addFilho(VideoGUI.tfNomeVideo.getText() + ".mov");
 		tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
 		bOK.setEnabled(true);
 	}

@@ -109,29 +109,29 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
 	}//GEN-LAST:event_btnCancelarActionPerformed
 
         private void btnSalvaSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvaSairActionPerformed
+			// VER COMO FAZER PARA ELE NÃO ESCREVER POR CIMA CASO ESTIVER ABRINDO UM NOVO COM O MESMO NOME
 			if (Validador.caminhoValido(txfTitulo.getText())) {
-				if (!Validador.caminhoExistente(txfTitulo.getText())) {
-					AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-					AjudaTextual ajudaTextual = new AjudaTextual();
-					ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-					ajudaTextual.setTexto(txaEditTexto.getText());
-					//Pegar o getNome() da funcionalidade para passar o caminho
-					gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
-					dispose();
-				}
-			}
-        }//GEN-LAST:event_btnSalvaSairActionPerformed
-
-	private void btnSalvaActionPerformed(java.awt.event.ActionEvent evt) {
-		if (Validador.caminhoValido(txfTitulo.getText())) {
-			if (!Validador.caminhoExistente(txfTitulo.getText())) {
-				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
+				if(!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho()+"\\"+txfTitulo.getText() + ".doc"))
+					InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
 				AjudaTextual ajudaTextual = new AjudaTextual();
 				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
 				ajudaTextual.setTexto(txaEditTexto.getText());
 				//Pegar o getNome() da funcionalidade para passar o caminho
 				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+				dispose();
 			}
+        }//GEN-LAST:event_btnSalvaSairActionPerformed
+
+	private void btnSalvaActionPerformed(java.awt.event.ActionEvent evt) {
+		if (Validador.caminhoValido(txfTitulo.getText())) {
+			if(!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho()+"\\"+txfTitulo.getText() + ".doc"))
+				InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
+			AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
+			AjudaTextual ajudaTextual = new AjudaTextual();
+			ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
+			ajudaTextual.setTexto(txaEditTexto.getText());
+			//Pegar o getNome() da funcionalidade para passar o caminho
+			gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
 		}
 	}
 

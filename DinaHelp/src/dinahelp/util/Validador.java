@@ -3,6 +3,11 @@ package dinahelp.util;
 import java.io.File;
 import javax.swing.JOptionPane;
 
+/**
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
+ */
 public class Validador {
 
 	public static boolean caminhoValido(String nomeArquivoPasta) {
@@ -23,14 +28,8 @@ public class Validador {
 		}
 		return retorno;
 	}
-	public static boolean caminhoExistente(String caminhoCompleto){
-		File arquivo = new File(caminhoCompleto);
-		boolean retorno = arquivo.exists();
-		
-		if(retorno){
-			JOptionPane.showMessageDialog(null, "Arquivo já existente!");
-		}
-		
-		return retorno;
+
+	public static boolean caminhoExistente(String caminhoCompleto) {
+		return new File(caminhoCompleto).exists();
 	}
 }

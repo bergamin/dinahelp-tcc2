@@ -27,7 +27,7 @@ public class Arvore extends JPanel {
 
 	public Arvore() {
 		super(new GridLayout(1, 0));
-		
+
 		root = new DefaultMutableTreeNode("Projetos");
 		modelo = new DefaultTreeModel(root);
 		modelo.addTreeModelListener(new MyTreeModelListener());

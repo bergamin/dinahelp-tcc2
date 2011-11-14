@@ -9,9 +9,9 @@ import javax.media.datasink.*;
 import java.util.Vector;
 
 /**
- * Merge the tracks from different inputs and generate a QuickTime file
- * with the all the merged tracks. Documentation is available on the
- *  Java Media Framework website.
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
  */
 public class Merge implements ControllerListener, DataSinkListener {
 
