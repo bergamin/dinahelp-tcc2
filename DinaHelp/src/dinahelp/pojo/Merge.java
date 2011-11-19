@@ -61,7 +61,7 @@ public class Merge implements ControllerListener, DataSinkListener {
 				dataOutputs[i] = processors[i].getDataOutput();
 				processors[i].start();
 			} catch (Exception e) {
-//				System.err.println("Failed to create a processor: " + e);
+				System.err.println("Falha ao criar processador: " + e);
 				System.exit(-1);
 			}
 		}

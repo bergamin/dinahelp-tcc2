@@ -25,7 +25,7 @@ public class AudioNegocio extends Thread {
 	 *  no effect, since it may be changed by the user before
 	 *  recording starts. Is changed from Run_KRUT.createSampler().
 	 */
-	public int sampleSize = 8;
+	public int sampleSize = 16;
 	/** The number of recording channels. Changing this value here may have
 	 *  no effect, since it may be changed by the user before
 	 *  recording starts. Is changed from Run_KRUT.createSampler().

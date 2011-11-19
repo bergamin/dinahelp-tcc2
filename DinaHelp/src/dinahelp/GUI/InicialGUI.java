@@ -1,6 +1,7 @@
 package dinahelp.GUI;
 
 import com.sun.awt.AWTUtilities;
+import dinahelp.negocio.AjudaTextualNegocio;
 import dinahelp.util.Arvore;
 import dinahelp.util.Config;
 import java.awt.Desktop;
@@ -225,6 +226,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
     // End of variables declaration//GEN-END:variables
 
 	@Override
+	@SuppressWarnings("static-access")
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 
@@ -259,14 +261,25 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 			}
 		} else if (COMANDO_AUDIO.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				// TODO áudio
+				AudioGUI audioGUI = new AudioGUI();
+				audioGUI.setVisible(true);
 			}
 		} else if (COMANDO_ABRIR.equals(comando)) {
-			try {
-				Desktop desktop = Desktop.getDesktop();
-				desktop.open(new File(aProjetos.getCaminho()));
-			} catch (IOException ex) {
-				Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);
+			if (aProjetos.getCaminho().contains(".doc")) {
+				AjudaTextualNegocio ajTx = new AjudaTextualNegocio();
+				AjudaTextualGUI ajTxGUI = new AjudaTextualGUI();
+			//	@SuppressWarnings("MalformedRegexp")
+			//	String[] vetCaminho = aProjetos.getCaminho().split("\\");
+			//	ajTxGUI.txfTitulo.setText(vetCaminho[vetCaminho.length - 1]);
+				ajTxGUI.txaEditTexto.setText(ajTx.carregarArquivoAjudaTextual(aProjetos.getCaminho()));
+				ajTxGUI.setVisible(true);
+			} else {
+				try {
+					Desktop desktop = Desktop.getDesktop();
+					desktop.open(new File(aProjetos.getCaminho()));
+				} catch (IOException ex) {
+					Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);
+				}
 			}
 			repaint();
 		}

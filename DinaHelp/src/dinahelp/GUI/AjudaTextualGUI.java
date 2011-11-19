@@ -153,7 +153,7 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvaSair;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea txaEditTexto;
-    private javax.swing.JTextField txfTitulo;
+    public static javax.swing.JTextArea txaEditTexto;
+    public static javax.swing.JTextField txfTitulo;
     // End of variables declaration//GEN-END:variables
 }

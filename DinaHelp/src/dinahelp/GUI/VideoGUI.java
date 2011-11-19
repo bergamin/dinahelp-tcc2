@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -18,26 +19,34 @@ import javax.swing.JOptionPane;
  */
 public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
+	// Comandos dos botões
 	private static String COMANDO_AREA = "COMANDO_AREA";
 	private static String COMANDO_TELAINTEIRA = "COMANDO_TELAINTEIRA";
 	private static String COMANDO_GRAVA = "COMANDO_GRAVA";
 	private static String COMANDO_PARA = "COMANDO_PARA";
+	// Área de captura
 	public static int x;
 	public static int y;
 	public static int largura;
 	public static int altura;
-	public AudioNegocio audio;
-	public static VideoNegocio video;
-	private boolean gravaAudio = false;
-	private boolean parando = false;
+	// Retângulo com a área de captura. É alterado conforme os parâmetros acima
 	private Rectangle retangulo = new Rectangle(0, 0, 360, 240);
+	// Thread de áudio
+	public static AudioNegocio audio;
+	// Thread de vídeo
+	public static VideoNegocio video;
+	// Deve-se gravar o áudio junto do vídeo?
+	private boolean gravaAudio = false;
+	// Parando a gravação
+	private boolean parando = false;
+	// Frames por segundo
 	private int fps = 30;
-	private int frequencia = 22050;
-
-	/** Creates new form VideoGUI */
+	// Frequência
+	private float frequencia = 22050f;
+	
 	public VideoGUI() {
 		x = y = largura = altura = 0;
-
+		
 		criaAudio();
 		criaVideo();
 		initComponents();
@@ -241,7 +250,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		if (gravaAudio) {
 			audio.stopRecording();
 			video.gravandoAudio = false;
-			video.wakeUp(); // VER ISSO
+			video.wakeUp();
 		}
 
 		/** Encode video */
@@ -260,9 +269,16 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			// Juntar áudio e vídeo
 			try {
 				String arquivoAudio = "";
-				String caminhoVideo = ""; // Ver o caminho de gravação do áudio/vídeo
+				String caminhoVideo = "temp.mov"; // Ver o caminho de gravação do áudio/vídeo
+				String caminhoVideo2 = "temp2.mov";
 				arquivoAudio = audio.audioFile.toURL().toString(); // Ver o caminho de gravação do áudio/vídeo
-				String argumentosMerge[] = {"-o", caminhoVideo, video.arquivoTemp, arquivoAudio};
+			//	caminhoVideo = InicialGUI.aProjetos.getCaminho()+"\\"+tfNomeVideo.getText()+".mov";
+			//	File temp = new File(InicialGUI.aProjetos.getCaminho()+"\\"+tfNomeVideo.getText()+".mov");
+				File temp = new File(caminhoVideo);
+				File temp2 = new File(caminhoVideo2);
+				caminhoVideo = temp.toURL().toString();
+				caminhoVideo2 = temp2.toURL().toString();
+				String argumentosMerge[] = {"-o", caminhoVideo2, caminhoVideo, arquivoAudio}; //video.arquivoTemp
 
 				// Restaura a GUI e deixa o merge executando em segundo plano
 				// restoreGUI(); // Ver para talvez zerar as coisas de volta para o padrão
@@ -285,7 +301,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			try {
 				parar();
 			} catch (Exception e) {
-				System.out.println("Stop thread cancelled");
+				System.out.println("Thread de Parada Cancelada");
 				System.out.println(e);
 			} finally {
 //                myProgressBar.dispose();

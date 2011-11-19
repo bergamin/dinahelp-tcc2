@@ -13,6 +13,7 @@ import java.io.File;
 public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionListener {
 
 	private static String COMANDO_ADD = "COMANDO_ADD";
+	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
 	private static final long serialVersionUID = 1L;
 
 	public NovaFuncionalidadeGUI() {
@@ -24,9 +25,6 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 
         jtfNovaFuncNome = new javax.swing.JTextField();
         jlNovaFuncNome = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jtaNovaFuncDescricao = new javax.swing.JTextArea();
-        jlNovaFuncDescricao = new javax.swing.JLabel();
         jbNovaFuncOK = new javax.swing.JButton();
         jbNovaFuncCancelar = new javax.swing.JButton();
 
@@ -35,17 +33,13 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 
         jlNovaFuncNome.setText("Nome:");
 
-        jtaNovaFuncDescricao.setColumns(20);
-        jtaNovaFuncDescricao.setRows(5);
-        jScrollPane1.setViewportView(jtaNovaFuncDescricao);
-
-        jlNovaFuncDescricao.setText("Descrição:");
-
         jbNovaFuncOK.setText("OK");
         jbNovaFuncOK.setActionCommand(COMANDO_ADD);
         jbNovaFuncOK.addActionListener(this);
 
         jbNovaFuncCancelar.setText("Cancelar");
+        jbNovaFuncCancelar.setActionCommand(COMANDO_CANCELAR);
+        jbNovaFuncCancelar.addActionListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -56,10 +50,8 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jlNovaFuncNome)
-                        .addGap(23, 23, 23)
-                        .addComponent(jtfNovaFuncNome, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
-                    .addComponent(jlNovaFuncDescricao)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfNovaFuncNome, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jbNovaFuncOK, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -73,11 +65,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlNovaFuncNome)
                     .addComponent(jtfNovaFuncNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jlNovaFuncDescricao)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbNovaFuncCancelar)
                     .addComponent(jbNovaFuncOK))
@@ -97,12 +85,9 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 		});
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbNovaFuncCancelar;
     private javax.swing.JButton jbNovaFuncOK;
-    private javax.swing.JLabel jlNovaFuncDescricao;
     private javax.swing.JLabel jlNovaFuncNome;
-    private javax.swing.JTextArea jtaNovaFuncDescricao;
     private javax.swing.JTextField jtfNovaFuncNome;
     // End of variables declaration//GEN-END:variables
 
@@ -118,6 +103,8 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 					dispose();
 				}
 			}
+		} else if (COMANDO_CANCELAR.equals(comando)) {
+			dispose();
 		}
 	}
 }

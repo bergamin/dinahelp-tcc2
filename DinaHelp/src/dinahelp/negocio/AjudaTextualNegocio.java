@@ -27,9 +27,9 @@ public class AjudaTextualNegocio {
 		}
 	}
 
-	public String carregarArquivoAjudaTextual(String caminho, String nomeArquivo) {
+	public String carregarArquivoAjudaTextual(String caminho) {
 		try {
-			arquivoTexto = new File(caminho + "\\" + nomeArquivo);
+			arquivoTexto = new File(caminho);
 			BufferedReader buffer = new BufferedReader(new FileReader(arquivoTexto));
 			String str = "";
 
