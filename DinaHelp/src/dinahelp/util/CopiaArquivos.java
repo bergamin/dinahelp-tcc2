@@ -37,7 +37,7 @@ public class CopiaArquivos {
 			new File(origem).delete();
 
 		} catch (IOException e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 }

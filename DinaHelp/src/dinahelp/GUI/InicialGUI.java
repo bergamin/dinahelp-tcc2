@@ -268,9 +268,8 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 			if (aProjetos.getCaminho().contains(".doc")) {
 				AjudaTextualNegocio ajTx = new AjudaTextualNegocio();
 				AjudaTextualGUI ajTxGUI = new AjudaTextualGUI();
-			//	@SuppressWarnings("MalformedRegexp")
-			//	String[] vetCaminho = aProjetos.getCaminho().split("\\");
-			//	ajTxGUI.txfTitulo.setText(vetCaminho[vetCaminho.length - 1]);
+				int index = aProjetos.getCaminho().lastIndexOf("\\");
+				ajTxGUI.txfTitulo.setText(aProjetos.getCaminho().substring(index+1,aProjetos.getCaminho().length()-4));
 				ajTxGUI.txaEditTexto.setText(ajTx.carregarArquivoAjudaTextual(aProjetos.getCaminho()));
 				ajTxGUI.setVisible(true);
 			} else {

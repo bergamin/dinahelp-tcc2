@@ -148,9 +148,7 @@ public class AudioNegocio extends Thread {
 	 */
 	public AudioNegocio(String fileName) {
 		if (!setAudioFile(fileName)) {
-//			System.out.println("Error! "
-//					+ "Failed to open output file "
-//					+ fileName + ".");
+			System.out.println("ERRO! Falha ao abrir arquivo de saída " + fileName + ".");
 		}
 	}
 
@@ -164,9 +162,7 @@ public class AudioNegocio extends Thread {
 	 */
 	public AudioNegocio() {
 		if (!setAudioFile(defaultFileName)) {
-//			System.out.println("Error! "
-//					+ "Failed to open output file "
-//					+ defaultFileName + ".");
+			System.out.println("ERRO! Falha ao abrir arquivo de saída " + defaultFileName + ".");
 		}
 	}
 
@@ -203,8 +199,7 @@ public class AudioNegocio extends Thread {
 			/** Use the maximum buffersize available. */
 			targetDataLine.open(audioFormat, info.getMaxBufferSize());
 		} catch (LineUnavailableException e) {
-//			System.out.println("unable to get a recording line");
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 		/** Set the audio file type. */
 		AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
@@ -246,9 +241,9 @@ public class AudioNegocio extends Thread {
 			FileOutputStream outFileStream = new FileOutputStream(m_outputFile);
 			audioOutStream = new BufferedOutputStream(outFileStream, memoryBufferSize);
 		} catch (FileNotFoundException fe) {
-//			System.err.println(fe);
+			System.err.println(fe);
 		} catch (OutOfMemoryError oe) {
-//			System.err.println(oe);
+			System.err.println(oe);
 		}
 	}
 
@@ -272,7 +267,7 @@ public class AudioNegocio extends Thread {
 			m_line.stop();
 			m_line.close();
 		} catch (Exception e) {
-//			System.out.println(e);
+			System.out.println(e);
 		}
 	}
 
@@ -296,9 +291,9 @@ public class AudioNegocio extends Thread {
 	 */
 	public synchronized void hold() {
 		try {
-			wait(3000);
+			wait(6000);
 		} catch (InterruptedException ie) {
-//			System.err.println(ie);
+			System.err.println(ie);
 		}
 	}
 
@@ -544,14 +539,14 @@ public class AudioNegocio extends Thread {
 					Thread.sleep(sleepTime);
 				}
 			} catch (OutOfMemoryError o) {
-//				System.out.println(o);
+				System.out.println(o);
 			} catch (ArrayIndexOutOfBoundsException oe) {
-//				System.out.println(oe);
+				System.out.println(oe);
 //				System.out.println("numBytesRead: " + numBytesRead);
 //				System.out.println("bytesToRead: " + bytesToRead);
 //				System.out.println("missingFrames: " + missingFrames);
 			} catch (Exception e) {
-//				System.out.println(e);
+				System.out.println(e);
 			} finally {
 				// were finished recording audio.
 //                System.out.println("Missed audio frames: " +
@@ -587,7 +582,7 @@ public class AudioNegocio extends Thread {
 			audioFile = new File(fileName);
 			set = true;
 		} catch (Exception e) {
-//			System.err.println(e);
+			System.err.println(e);
 		} finally {
 			return set;
 		}
@@ -632,7 +627,7 @@ public class AudioNegocio extends Thread {
 			/**	remove the old buffer file. */
 			m_outputFile.delete();
 		} catch (Exception e) {
-//			System.err.println(e);
+			System.err.println(e);
 		} finally {
 			recording = false;
 			wakeUp();

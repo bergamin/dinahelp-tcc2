@@ -130,6 +130,9 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 			PararThread pararThread = new PararThread();
 			pararThread.setPriority(Thread.MIN_PRIORITY);
 			pararThread.start();
+			ConfirmaArquivoGUI c = new ConfirmaArquivoGUI("AUDIO");
+			c.setVisible(true);
+			dispose();
 		}
 	}
 
@@ -156,11 +159,14 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 		 */
 		audio.start();
 	}
-	private void parar(){
+	private void parar() throws InterruptedException{
+		Thread.sleep(3000);
 		audio.stopped = true;
+		Thread.sleep(3000);
 		audio.stopRecording();
+		Thread.sleep(3000);
 		while (audio.recording) {
-			audio.hold();
+		//	audio.hold();
 		}
 	}
 	private class PararThread extends Thread {

@@ -3,6 +3,7 @@ package dinahelp.GUI;
 import dinahelp.negocio.AjudaTextualNegocio;
 import dinahelp.pojo.AjudaTextual;
 import dinahelp.util.Validador;
+import javax.swing.JOptionPane;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -73,7 +74,7 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnSalvaSair, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -123,15 +124,19 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
         }//GEN-LAST:event_btnSalvaSairActionPerformed
 
 	private void btnSalvaActionPerformed(java.awt.event.ActionEvent evt) {
-		if (Validador.caminhoValido(txfTitulo.getText())) {
-			if(!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho()+"\\"+txfTitulo.getText() + ".doc"))
-				InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
-			AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-			AjudaTextual ajudaTextual = new AjudaTextual();
-			ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-			ajudaTextual.setTexto(txaEditTexto.getText());
-			//Pegar o getNome() da funcionalidade para passar o caminho
-			gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+		if(txfTitulo.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null, "O nome do arquivo deve ser preenchido");
+		}else{
+			if (Validador.caminhoValido(txfTitulo.getText())) {
+				if(!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho()+"\\"+txfTitulo.getText() + ".doc"))
+					InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
+				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
+				AjudaTextual ajudaTextual = new AjudaTextual();
+				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
+				ajudaTextual.setTexto(txaEditTexto.getText());
+				//Pegar o getNome() da funcionalidade para passar o caminho
+				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+			}
 		}
 	}
 
