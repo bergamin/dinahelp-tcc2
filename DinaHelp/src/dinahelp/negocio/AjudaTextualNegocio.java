@@ -14,31 +14,32 @@ import java.io.PrintWriter;
  */
 public class AjudaTextualNegocio {
 
-	private File arquivoTexto;
+    private File arquivoTexto;
 
-	public void geraArquivoAjudaTextual(String caminho, String nomeArquivo, String texto) {
-		try {
-			arquivoTexto = new File(caminho + "\\" + nomeArquivo);
-			FileWriter fw = new FileWriter(arquivoTexto);
-			PrintWriter pw = new PrintWriter(fw);
-			pw.write(texto);
-			fw.close();
-		} catch (IOException e) {
-		}
-	}
+    public void geraArquivoAjudaTextual(String caminho, String nomeArquivo, String texto) {
+        try {
+            arquivoTexto = new File(caminho + "\\" + nomeArquivo);
+            FileWriter fw = new FileWriter(arquivoTexto);
+            PrintWriter pw = new PrintWriter(fw);
+            pw.write(texto);
+            fw.close();
+        } catch (IOException e) {
+        }
+    }
 
-	public String carregarArquivoAjudaTextual(String caminho) {
-		try {
-			arquivoTexto = new File(caminho);
-			BufferedReader buffer = new BufferedReader(new FileReader(arquivoTexto));
-			String str = "";
+    public String carregarArquivoAjudaTextual(String caminho) {
+        try {
+            arquivoTexto = new File(caminho);
+            BufferedReader buffer = new BufferedReader(new FileReader(arquivoTexto));
+            String str = "";
 
-			while (buffer.ready()) {
-				str = str + buffer.readLine();
-			}
-			return str;
-		} catch (IOException e) {
-		}
-		return "";
-	}
+            while (buffer.ready()) {
+                str = str + buffer.readLine() + "\n\r";
+
+            }
+            return str;
+        } catch (IOException e) {
+        }
+        return "";
+    }
 }
