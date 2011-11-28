@@ -179,7 +179,6 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 				System.out.println("Thread de Parada Cancelada");
 				System.out.println(e);
 			} finally {
-//                myProgressBar.dispose();
 			}
 		}
 	}

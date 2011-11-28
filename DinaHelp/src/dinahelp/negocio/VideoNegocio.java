@@ -36,8 +36,7 @@ public class VideoNegocio extends Thread {
 	// Indica se o mouse deve ser capturado ou não
 	public boolean mostraMouse = true;
 	// Previne a gravação de iniciar por engano enquanto o método init()
-	// estiver executando. é alterado antes e depois da chamada no init()
-	// e dentro dele. É verificado no início do método run()
+	// estiver executando.
 	public boolean inicializando = false;
 	// Caminho para a gravação do arquivo temporário de vídeo.
 	// No caso, a raiz de onde estiver instalado o programa.
@@ -55,10 +54,10 @@ public class VideoNegocio extends Thread {
 	// não teremos que preencher o espaço dele com frames que nunca existiram
 	private byte[] priUltFrame;
 	// Captura o tamanho do ByteArrayOutputStream usado para guardar frames na
-	// memória. É usado no método run() para calcular o tamanho de cada frame.
+	// memória.
 	private int tamanho = 0;
 	// Guarda o tamanho de todos os frames capturados
-	private int[] sizes;
+	private int[] tamanhos;
 	// Guarda o nº de todos os frames perdidos
 	private int[] framesPerdidos;
 	// Isto é onde todos os frames encodados são gravados na memória
@@ -123,12 +122,12 @@ public class VideoNegocio extends Thread {
 			// performance test.
 			robot = new Robot();
 //			System.out.print("Initializing...");
-			testEnc();
+//			testEnc();
 //			System.out.println(" Done.");
 		} catch (AWTException awte) {
 //			System.err.println("AWTException " + awte);
 			System.exit(1);
-		} catch (IOException e) {
+//		} catch (IOException e) {
 //			System.err.println("IOException " + e);
 		}
 	}
@@ -160,7 +159,7 @@ public class VideoNegocio extends Thread {
 		bytesJPG_2 = new ByteArrayOutputStream();
 		/** Clear memory. */
 		encoder = null;
-		sizes = null;
+		tamanhos = null;
 		framesPerdidos = null;
 		System.gc();
 		/** trying to allocate all available memory except 20MB
@@ -297,7 +296,7 @@ public class VideoNegocio extends Thread {
 		while (memError) {
 			memError = false;
 			try {
-				sizes = new int[NumMaxImg];
+				tamanhos = new int[NumMaxImg];
 				//	Allow as many missed frames.
 				framesPerdidos = new int[NumMaxImg];
 			} catch (OutOfMemoryError oe) {
@@ -316,9 +315,9 @@ public class VideoNegocio extends Thread {
 		 */
 		framesPerdidos[0] = NumMaxImg + 1;
 		/** One frame is already caught, setup size for that frame */
-		sizes[0] = bytesJPG.size();
+		tamanhos[0] = bytesJPG.size();
 		/** Setup size counter. */
-		tamanho = sizes[0];
+		tamanho = tamanhos[0];
 		/** Setup frame counter */
 		contImagens = 1;
 		contPerdidos = 0;
@@ -635,8 +634,8 @@ public class VideoNegocio extends Thread {
 					encoder.encode(imagem);
 //                    jpgBytes.write(this.bufferedImageToByteArray(image));
 					/** Save the size of the jpg in a separate array */
-					sizes[contImagens] = bytesJPG.size() - tamanho;
-					tamanho += sizes[contImagens];
+					tamanhos[contImagens] = bytesJPG.size() - tamanho;
+					tamanho += tamanhos[contImagens];
 					/** The next part is used to stay in sync. */
 					tempoSinc += tempo;
 					tempoAtual = System.currentTimeMillis();
@@ -687,7 +686,7 @@ public class VideoNegocio extends Thread {
 					} catch (IOException e) {
 //						System.err.println(e);
 					}
-					sizes[contImagens] = priUltFrame.length;
+					tamanhos[contImagens] = priUltFrame.length;
 					/** At this point we are done gravando.
 					 *  We create a new DataList object for this movie.
 					 *  The DataList object acts as an input source
@@ -697,7 +696,7 @@ public class VideoNegocio extends Thread {
 					 */
 					imagens = new ListaDeDados();
 					imagens.totImg = contImagens;
-					imagens.tamanhoImagens = sizes;
+					imagens.tamanhoImagens = tamanhos;
 					imagens.framesPerdidos = framesPerdidos;
 					imagens.setArquivo(despejo);
 					gravando = false;
