@@ -9,15 +9,19 @@ import dinahelp.util.CopiaArquivos;
  */
 public class ConfirmaArquivoGUI extends javax.swing.JFrame {
 
+	/**
+	 * Construtor. Move o arquivo temporário para a pasta selecionada na
+	 * árvore, adiciona o item na árvore e informa o caminho na tela.
+	 */
 	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	public ConfirmaArquivoGUI(String tipo) {
 		initComponents();
-		if(tipo.equalsIgnoreCase("VIDEO")){
+		if (tipo.equalsIgnoreCase("VIDEO")) {
 			while (VideoGUI.video.executando) { /* não faz nada enquanto estiver gravando e encodando */ }
 			new CopiaArquivos(VideoGUI.video.arquivoTemp, InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
 			InicialGUI.aProjetos.addFilho(VideoGUI.tfNomeVideo.getText() + ".mov");
 			tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
-		}else{ // tipo = "AUDIO"
+		} else { // tipo = "AUDIO"
 			while (AudioGUI.audio.recording || !AudioGUI.audio.stopped) { /* não faz nada enquanto o áudio estiver sendo gravado */ }
 			new CopiaArquivos("sampleaudio.wav", InicialGUI.aProjetos.getCaminho() + "\\" + AudioGUI.tfNomeAudio.getText() + ".wav");
 			InicialGUI.aProjetos.addFilho(AudioGUI.tfNomeAudio.getText() + ".wav");
@@ -25,7 +29,7 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
 		}
 		bOK.setEnabled(true);
 	}
-	
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -16,10 +16,11 @@ import java.util.Date;
  */
 public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
 
+	/** Guarda os dados de posição da captura */
 	private CapturaTela ct = new CapturaTela();
+	/** tipo de captura (vídeo ou captura estática) */
 	private char tipo;
 
-	/** Creates new form CapturaTelaGUI */
 	@SuppressWarnings("LeakingThisInConstructor")
 	public CapturaTelaGUI(char tipo) {
 		this.tipo = tipo;
@@ -49,21 +50,10 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-//		java.awt.EventQueue.invokeLater(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				new CapturaTelaGUI().setVisible(true);
-//			}
-//		});
-	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
+	/** Eventos de mouse */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		ct.setX1(e.getX());
@@ -113,6 +103,7 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 		repaint();
 	}
 
+	/** desenha a reta */
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); // Limpa a tela

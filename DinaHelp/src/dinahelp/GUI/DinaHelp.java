@@ -14,6 +14,10 @@ public class DinaHelp {
 
 	public static InicialGUI iniciaGUI;
 
+	/**
+	 * Inicia o programa e define o look and feel para o do sistema operacional
+	 * em uso no momento
+	 */
 	public static void main(String[] args) {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {

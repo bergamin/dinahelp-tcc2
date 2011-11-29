@@ -11,18 +11,27 @@ import java.io.IOException;
  * @author Felipe Bochehin
  */
 public class ListaDeDados {
-
-	public boolean acabou = false; // indica que todos os frames foram lidos
-	public int totImg = 0; // total de frames no array tamanhoImagens
-	public int imagensUnicas = 0; // total de frames únicos enviados (frames duplicados são frames enviados novamente para compensar perda)
-	public int imagensEnviadas = 0; // total incluindo duplicados
+	
+	// indica que todos os frames foram lidos
+	public boolean acabou = false;
+	// total de frames no array tamanhoImagens
+	public int totImg = 0;
+	// total de frames únicos enviados (frames duplicados são frames enviados
+	// novamente para compensar perda)
+	public int imagensUnicas = 0;
+	// total incluindo duplicados
+	public int imagensEnviadas = 0;
+	// tamanho em bites de cada imagem a ser encodada
+	public int[] tamanhoImagens;
+	// nº dos frames perdidos
+	public int[] framesPerdidos;
+	// contador internos de quantos já foram perdidos até o momento
+	private int contaPerdidos;
+	// Array de bytes com os dados a serem lidos pelo método leDados
+	private byte[] dados;
 	public FileInputStream fis;
 	public File arquivo;
-	public int[] tamanhoImagens; // tamanho em bites de cada imagem a ser encodada
-	public int[] framesPerdidos; // nº dos frames perdidos
-	private int contaPerdidos; // contador internos de quantos já foram perdidos até o momento
-	private byte[] dados; // Array de bytes com os dados a serem lidos pelo método leDados
-
+	
 	public ListaDeDados() {
 		contaPerdidos = 0;
 	}
@@ -34,7 +43,7 @@ public class ListaDeDados {
 			fis = new FileInputStream(this.arquivo);
 			return true;
 		} catch (FileNotFoundException e) {
-//			System.err.println("Arquivo não encontrado!");
+			System.err.println("Arquivo não encontrado!");
 			return false;
 		}
 	}

@@ -21,6 +21,7 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 
+	/** Comando dos botões */
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static String COMANDO_REMOVE = "COMANDO_REMOVE";
 	private static String COMANDO_TEXTO = "COMANDO_TEXTO";
@@ -29,9 +30,12 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 	private static String COMANDO_ANIMACAO = "COMANDO_ANIMACAO";
 	private static String COMANDO_AUDIO = "COMANDO_AUDIO";
 	private static String COMANDO_ABRIR = "COMANDO_ABRIR";
-	public static Config config = new Config("C:\\TESTE"); // Criar um arquivo de configuração e ler.
+	/**
+	 * Futuramente criar um arquivo de configuração com todas as configurações
+	 * (workspace, fps, qualidade, etc) e ler aqui.
+	 */
+	public static Config config = new Config("C:\\DinaHelp");
 
-	/** Cria um novo form InicialGUI */
 	public InicialGUI() {
 		initComponents();
 	}
@@ -196,15 +200,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 
 	}//GEN-LAST:event_miNovoProjetoActionPerformed
 
-	public static void main(String args[]) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new InicialGUI().setVisible(true);
-			}
-		});
-	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bAddFunc;
     private javax.swing.JButton bAnimacao;
@@ -225,6 +220,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JScrollPane spProjetos;
     // End of variables declaration//GEN-END:variables
 
+	/** Execução dos comandos dos botões */
 	@Override
 	@SuppressWarnings("static-access")
 	public void actionPerformed(ActionEvent e) {
@@ -232,46 +228,47 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 
 		if (COMANDO_ADD.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				NovaFuncionalidadeGUI nf = new NovaFuncionalidadeGUI();
-				nf.setVisible(true);
+				NovaFuncionalidadeGUI novaFuncionalidade = new NovaFuncionalidadeGUI();
+				novaFuncionalidade.setVisible(true);
 			}
 		} else if (COMANDO_REMOVE.equals(comando)) {
 			aProjetos.removeNodo();
 		} else if (COMANDO_TEXTO.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				AjudaTextualGUI tat = new AjudaTextualGUI();
-				tat.setVisible(true);
+				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI();
+				ajudaTextual.setVisible(true);
 			}
 		} else if (COMANDO_SCREENSHOT.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
 				setExtendedState(JFrame.ICONIFIED);
-				CapturaTelaGUI tsc = new CapturaTelaGUI('I');
-				tsc.setExtendedState(MAXIMIZED_BOTH);
-				AWTUtilities.setWindowOpacity(tsc, 0.5f);
-				tsc.setVisible(true);
+				CapturaTelaGUI capturaTela = new CapturaTelaGUI('I');
+				capturaTela.setExtendedState(MAXIMIZED_BOTH);
+				AWTUtilities.setWindowOpacity(capturaTela, 0.5f);
+				capturaTela.setVisible(true);
 			}
 		} else if (COMANDO_VIDEO.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				VideoGUI gv = new VideoGUI();
-				gv.setVisible(true);
+				VideoGUI video = new VideoGUI();
+				video.setVisible(true);
 			}
 		} else if (COMANDO_ANIMACAO.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				// TODO animação
+				AnimacaoGUI animacao = new AnimacaoGUI();
+				animacao.setVisible(true);
 			}
 		} else if (COMANDO_AUDIO.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				AudioGUI audioGUI = new AudioGUI();
-				audioGUI.setVisible(true);
+				AudioGUI audio = new AudioGUI();
+				audio.setVisible(true);
 			}
 		} else if (COMANDO_ABRIR.equals(comando)) {
 			if (aProjetos.getCaminho().contains(".doc")) {
-				AjudaTextualNegocio ajTx = new AjudaTextualNegocio();
-				AjudaTextualGUI ajTxGUI = new AjudaTextualGUI();
+				AjudaTextualNegocio ajudaTNegocio = new AjudaTextualNegocio();
+				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI();
 				int index = aProjetos.getCaminho().lastIndexOf("\\");
-				ajTxGUI.txfTitulo.setText(aProjetos.getCaminho().substring(index+1,aProjetos.getCaminho().length()-4));
-				ajTxGUI.txaEditTexto.setText(ajTx.carregarArquivoAjudaTextual(aProjetos.getCaminho()));
-				ajTxGUI.setVisible(true);
+				ajudaTextual.txfTitulo.setText(aProjetos.getCaminho().substring(index + 1, aProjetos.getCaminho().length() - 4));
+				ajudaTextual.txaEditTexto.setText(ajudaTNegocio.carregarArquivoAjudaTextual(aProjetos.getCaminho()));
+				ajudaTextual.setVisible(true);
 			} else {
 				try {
 					Desktop desktop = Desktop.getDesktop();

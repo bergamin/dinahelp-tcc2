@@ -85,22 +85,9 @@ public class VideoNegocio extends Thread {
 	private JPEGImageEncoder encoder;
 	// Parâmetros do encoder para encodar as imagens
 	private JPEGEncodeParam param;
-	/** This object is used to reload the imagens
-	 *  from the file they are saved in, and then
-	 *  supply them to the JpegImagesToMovieMod class.
-	 *  A new imagens object is created and set up
-	 *  at the end of the main gravando thread
-	 *  (in the run() method). When the encode() method
-	 *  is called by the user, it takes this object and
-	 *  passes it on to the startDumper() method.
-	 */
+	// Utilizado para recarregar as imagens do arquivo onde as imagens foram
+	// salvas para serem utilizadas pela classe JpegParaMov
 	private ListaDeDados imagens;
-	/** This is the screensize of the default screen.
-	 *  If another screen would be used, this parameter would need
-	 *  to be updated.
-	 */
-	protected Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
 	/** Constructor for VideoNegocio.
 	 *  Test encoding to get a good
 	 *  value for avgCapSize set up.

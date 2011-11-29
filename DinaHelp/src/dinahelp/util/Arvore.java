@@ -3,6 +3,7 @@ package dinahelp.util;
 import dinahelp.GUI.InicialGUI;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -49,11 +50,11 @@ public class Arvore extends JPanel {
 			MutableTreeNode pai = (MutableTreeNode) (nodoAtual.getParent());
 			if (pai != null) {
 				TreePath caminho = arvore.getSelectionPath();
+				new File(getCaminho()).delete(); // SÓ NÃO DELETA PASTA COM ARQUIVOS DENTRO
 				modelo.removeNodeFromParent(nodoAtual);
 				return;
 			}
 		}
-		toolkit.beep();
 	}
 
 	/** Adiciona filho no nodo selecionado. */

@@ -1,3 +1,8 @@
+/**
+ * IMPORTANTE!!!
+ * ESTA CLASSE NÃO É MAIS USADA!!!
+ * REMOVER ISSO E O MENU TAMBÉM!!!
+ */
 package dinahelp.GUI;
 
 import javax.swing.JOptionPane;
@@ -94,16 +99,6 @@ public class NovoProjetoGUI extends javax.swing.JFrame {
 
 			dispose();
 		}
-	}
-
-	public static void main(String args[]) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new NovoProjetoGUI().setVisible(true);
-			}
-		});
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbNovoProjCancelar;

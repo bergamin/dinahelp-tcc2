@@ -15,6 +15,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * @author Guilherme Taffarel Bergamin
+ * @author Akanbi Strossi de Jesus
+ * @author Felipe Bochehin
+ */
 public class AnimacaoNegocio {
 	
 	// Lista de imagens

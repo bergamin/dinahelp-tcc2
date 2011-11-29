@@ -12,6 +12,7 @@ import java.io.File;
  */
 public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionListener {
 
+	/** Comando dos botões */
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
 	private static final long serialVersionUID = 1L;
@@ -75,15 +76,6 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	public static void main(String args[]) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new NovaFuncionalidadeGUI().setVisible(true);
-			}
-		});
-	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbNovaFuncCancelar;
     private javax.swing.JButton jbNovaFuncOK;
@@ -91,6 +83,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
     private javax.swing.JTextField jtfNovaFuncNome;
     // End of variables declaration//GEN-END:variables
 
+	/** Execução dos botões */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
