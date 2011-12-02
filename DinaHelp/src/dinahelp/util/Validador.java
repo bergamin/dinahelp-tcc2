@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  */
 public class Validador {
 
-	public static boolean caminhoValido(String nomeArquivoPasta) {
+	public static boolean nomeValido(String nomeArquivoPasta) {
 		boolean retorno = !(nomeArquivoPasta.contains(".")
 				|| nomeArquivoPasta.contains("\\")
 				|| nomeArquivoPasta.contains("/")

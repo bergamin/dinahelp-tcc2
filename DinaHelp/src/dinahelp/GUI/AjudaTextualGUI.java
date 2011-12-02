@@ -3,6 +3,8 @@ package dinahelp.GUI;
 import dinahelp.negocio.AjudaTextualNegocio;
 import dinahelp.pojo.AjudaTextual;
 import dinahelp.util.Validador;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 /**
@@ -10,14 +12,25 @@ import javax.swing.JOptionPane;
  * @author Akanbi Strossi de Jesus
  * @author Felipe Bochehin
  */
-public class AjudaTextualGUI extends javax.swing.JFrame {
+public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListener {
 
+	/** Comandos dos botões */
+	private static String COMANDO_SALVAR = "COMANDO_SALVAR";
+	private static String COMANDO_SALVAR_SAIR = "COMANDO_SALVAR_SAIR";
+	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
+	/** Caminho do arquivo */
 	private String caminho;
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Origem da chamada da tela:
+	 * CRIACAO ou EDICAO
+	 */
+	private String origem;
 
-	public AjudaTextualGUI() {
+	/** Construtor */
+	public AjudaTextualGUI(String origem) {
 		initComponents();
 		caminho = InicialGUI.aProjetos.getCaminho();
+		this.origem = origem;
 	}
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -41,25 +54,16 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
         jLabel1.setText("Titulo: ");
 
         btnSalva.setText("Salvar");
-        btnSalva.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvaActionPerformed(evt);
-            }
-        });
+        btnSalva.setActionCommand(COMANDO_SALVAR);
+        btnSalva.addActionListener(this);
 
         btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
+        btnCancelar.setActionCommand(COMANDO_CANCELAR);
+        btnCancelar.addActionListener(this);
 
         btnSalvaSair.setText("Salvar e Sair");
-        btnSalvaSair.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvaSairActionPerformed(evt);
-            }
-        });
+        btnSalvaSair.setActionCommand(COMANDO_SALVAR_SAIR);
+        btnSalvaSair.addActionListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,45 +102,6 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-	private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-		dispose();
-	}//GEN-LAST:event_btnCancelarActionPerformed
-
-        private void btnSalvaSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvaSairActionPerformed
-			// VER COMO FAZER PARA ELE NÃO ESCREVER POR CIMA CASO ESTIVER ABRINDO UM NOVO COM O MESMO NOME
-			if (Validador.caminhoValido(txfTitulo.getText())) {
-				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
-					InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
-				}
-				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-				AjudaTextual ajudaTextual = new AjudaTextual();
-				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-				ajudaTextual.setTexto(txaEditTexto.getText());
-				//Pegar o getNome() da funcionalidade para passar o caminho
-				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
-				dispose();
-			}
-        }//GEN-LAST:event_btnSalvaSairActionPerformed
-
-	private void btnSalvaActionPerformed(java.awt.event.ActionEvent evt) {
-		// VER COMO FAZER PARA ELE NÃO ESCREVER POR CIMA CASO ESTIVER ABRINDO UM NOVO COM O MESMO NOME
-		if (txfTitulo.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "O nome do arquivo deve ser preenchido");
-		} else {
-			if (Validador.caminhoValido(txfTitulo.getText())) {
-				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
-					InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
-				}
-				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-				AjudaTextual ajudaTextual = new AjudaTextual();
-				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-				ajudaTextual.setTexto(txaEditTexto.getText());
-				//Pegar o getNome() da funcionalidade para passar o caminho
-				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
-			}
-		}
-	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSalva;
@@ -146,4 +111,75 @@ public class AjudaTextualGUI extends javax.swing.JFrame {
     public static javax.swing.JTextArea txaEditTexto;
     public static javax.swing.JTextField txfTitulo;
     // End of variables declaration//GEN-END:variables
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String comando = e.getActionCommand();
+
+		if (COMANDO_CANCELAR.equals(comando)) {
+			dispose();
+		} else { // SALVAR ou SALVAR_SAIR
+			AjudaTextualNegocio ajudaNegocio = new AjudaTextualNegocio();
+			if (origem.equalsIgnoreCase("EDICAO")) {
+				ajudaNegocio.editarArquivoAjudaTextual(caminho, txaEditTexto.getText());
+			} else { // origem = "CRIACAO"
+				if (txfTitulo.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "O nome do arquivo deve ser preenchido");
+				} else {
+					if (Validador.nomeValido(txfTitulo.getText())) {
+						if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
+							InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
+							AjudaTextual ajudaTextual = new AjudaTextual();
+							ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
+							ajudaTextual.setTexto(txaEditTexto.getText());
+							ajudaNegocio.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+						} else {
+							JOptionPane.showMessageDialog(null, "Arquivo já existente!");
+						}
+					}
+				}
+			}
+			if (COMANDO_SALVAR_SAIR.equals(comando)) {
+				dispose();
+			}
+		}
+
+		////////////////////////////////////////////////////////////////////////
+
+//		if (COMANDO_SALVAR.equals(comando)) {
+//			if (txfTitulo.getText().isEmpty()) {
+//				JOptionPane.showMessageDialog(null, "O nome do arquivo deve ser preenchido");
+//			} else {
+//				if (Validador.nomeValido(txfTitulo.getText())) {
+//					if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
+//						InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
+//					} else {
+//						JOptionPane.showMessageDialog(null, "Arquivo já existente!");
+//					}
+//					AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
+//					AjudaTextual ajudaTextual = new AjudaTextual();
+//					ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
+//					ajudaTextual.setTexto(txaEditTexto.getText());
+//					//Pegar o getNome() da funcionalidade para passar o caminho
+//					gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+//				}
+//			}
+//		} else if (COMANDO_SALVAR_SAIR.equals(comando)) {
+//			// VER COMO FAZER PARA ELE NÃO ESCREVER POR CIMA CASO ESTIVER ABRINDO UM NOVO COM O MESMO NOME
+//			if (Validador.nomeValido(txfTitulo.getText())) {
+//				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
+//					InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
+//				}
+//				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
+//				AjudaTextual ajudaTextual = new AjudaTextual();
+//				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
+//				ajudaTextual.setTexto(txaEditTexto.getText());
+//				//Pegar o getNome() da funcionalidade para passar o caminho
+//				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+//				dispose();
+//			}
+//		} else if (COMANDO_CANCELAR.equals(comando)) {
+//			dispose();
+//		}
+	}
 }

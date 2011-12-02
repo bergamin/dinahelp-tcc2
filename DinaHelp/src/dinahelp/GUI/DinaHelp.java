@@ -12,7 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class DinaHelp {
 
-	public static InicialGUI iniciaGUI;
+	public static InicialGUI inicial;
 
 	/**
 	 * Inicia o programa e define o look and feel para o do sistema operacional
@@ -27,19 +27,19 @@ public class DinaHelp {
 				}
 			}
 		} catch (UnsupportedLookAndFeelException exc) {
-			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nUnsupportedLookAndFeelException");
+			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação será fechada\nUnsupportedLookAndFeelException");
 			System.exit(0);
 		} catch (ClassNotFoundException exc) {
-			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nClassNotFoundException");
+			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação será fechada\nClassNotFoundException");
 			System.exit(0);
 		} catch (InstantiationException exc) {
-			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nInstantiationException");
+			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação será fechada\nInstantiationException");
 			System.exit(0);
 		} catch (IllegalAccessException exc) {
-			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nIllegalAccessException");
+			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação será fechada\nIllegalAccessException");
 			System.exit(0);
 		}
-		iniciaGUI = new InicialGUI();
-		iniciaGUI.setVisible(true);
+		inicial = new InicialGUI();
+		inicial.setVisible(true);
 	}
 }

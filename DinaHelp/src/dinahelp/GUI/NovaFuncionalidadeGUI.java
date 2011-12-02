@@ -15,8 +15,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	/** Comando dos botões */
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
-	private static final long serialVersionUID = 1L;
-
+	
 	public NovaFuncionalidadeGUI() {
 		initComponents();
 	}
@@ -88,7 +87,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if (COMANDO_ADD.equals(comando)) {
-			if (Validador.caminhoValido(jtfNovaFuncNome.getText())) {
+			if (Validador.nomeValido(jtfNovaFuncNome.getText())) {
 				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText())) {
 					InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
 					File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());

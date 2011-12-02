@@ -235,7 +235,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 			aProjetos.removeNodo();
 		} else if (COMANDO_TEXTO.equals(comando)) {
 			if (!aProjetos.getCaminho().contains(".")) {
-				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI();
+				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI("CRIACAO");
 				ajudaTextual.setVisible(true);
 			}
 		} else if (COMANDO_SCREENSHOT.equals(comando)) {
@@ -264,7 +264,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 		} else if (COMANDO_ABRIR.equals(comando)) {
 			if (aProjetos.getCaminho().contains(".doc")) {
 				AjudaTextualNegocio ajudaTNegocio = new AjudaTextualNegocio();
-				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI();
+				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI("EDICAO");
 				int index = aProjetos.getCaminho().lastIndexOf("\\");
 				ajudaTextual.txfTitulo.setText(aProjetos.getCaminho().substring(index + 1, aProjetos.getCaminho().length() - 4));
 				ajudaTextual.txaEditTexto.setText(ajudaTNegocio.carregarArquivoAjudaTextual(aProjetos.getCaminho()));

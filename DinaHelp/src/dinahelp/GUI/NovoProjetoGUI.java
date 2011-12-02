@@ -3,6 +3,7 @@
  * ESTA CLASSE NÃO É MAIS USADA!!!
  * REMOVER ISSO E O MENU TAMBÉM!!!
  */
+
 package dinahelp.GUI;
 
 import javax.swing.JOptionPane;
@@ -13,8 +14,6 @@ import javax.swing.JOptionPane;
  * @author Felipe Bochehin
  */
 public class NovoProjetoGUI extends javax.swing.JFrame {
-
-	private static final long serialVersionUID = 1L;
 
 	public NovoProjetoGUI() {
 		initComponents();

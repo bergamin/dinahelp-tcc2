@@ -30,7 +30,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 	 * Retângulo com a área de captura.
 	 * É alterado conforme os parâmetros acima
 	 */
-	private Rectangle retangulo = new Rectangle(0, 0, 360, 240);
+	private Rectangle retangulo = new Rectangle();
 	/** Thread de vídeo */
 	public static VideoNegocio video;
 	/** Parando a gravação */
@@ -39,12 +39,12 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 	private int fps = 30;
 	/** Frequência */
 	private float frequencia = 22050f;
-	
+
 	/** Construtor */
 	public VideoGUI() {
-		
+
 		x = y = largura = altura = 0;
-		
+
 		criaVideo();
 		initComponents();
 	}
@@ -125,7 +125,6 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bArea;
     private javax.swing.JButton bFimGrava;
@@ -134,7 +133,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel jLabel1;
     public static javax.swing.JTextField tfNomeVideo;
     // End of variables declaration//GEN-END:variables
-	
+
 	/** Execução dos comandos dos botões */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -160,7 +159,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			} else {
 
 				setExtendedState(JFrame.ICONIFIED);
-				DinaHelp.iniciaGUI.setExtendedState(JFrame.ICONIFIED);
+				DinaHelp.inicial.setExtendedState(JFrame.ICONIFIED);
 
 				if (cbTelaInteira.isSelected()) {
 					x = y = 0;
@@ -168,7 +167,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 					altura = Toolkit.getDefaultToolkit().getScreenSize().height;
 				}
 				retangulo.setBounds(x, y, largura, altura);
-				// Iniciar gravação sincronizada
+				// Iniciar gravação sincronizada - ERA USADO PARA SINCRONIZAR COM O ÁUDIO, MAS NO FIM, DESENVOLVEMOS SEM ÁUDIO
 				long tempoSinc = System.currentTimeMillis();
 				video.setSyncTime(tempoSinc);
 				// Inicia gravação do vídeo
@@ -201,36 +200,21 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 	private class PararThread extends Thread {
 
 		@Override
+		@SuppressWarnings("CallToThreadDumpStack")
 		public void run() {
 			try {
 				parar();
 			} catch (Exception e) {
 				System.out.println("Thread de Parada Cancelada");
-				System.out.println(e);
-			} finally {
-//                myProgressBar.dispose();
+				e.printStackTrace();
 			}
 		}
 	}
-	/** This method just creates the ScreenGrabber.
-	 *  This method is called from the init() method,
-	 *  in a separate thread, to try to get some flow in
-	 *  the display of the program.
-	 */
+	
+	/** Cria um VideoNegocio e inicia sua Thread */
 	private void criaVideo() {
-		/** Make the ScreenGrabber. It will start as a seperate
-		 *  thread, with highest priority. The constructor to
-		 *  ScreenGrabber will just perform a speed test, and
-		 *  then it's done. Both retangulo and startFps are 
-		 *  global parameters that are already initiated.
-		 */
 		video = new VideoNegocio(retangulo, fps);
 		video.setPriority(Thread.MAX_PRIORITY);
-		/** Starts the ScreenGrabber thread. This thread will
-		 *  basically go through the ScreenGrabber.init() method, 
-		 *  and then wait, until gravando is started. See the
-		 *  ScreenGrabber.run() method.
-		 */
 		video.start();
 	}
 }
