@@ -21,15 +21,18 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
 			new CopiaArquivos(VideoGUI.video.arquivoTemp, InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
 			InicialGUI.aProjetos.addFilho(VideoGUI.tfNomeVideo.getText() + ".mov");
 			tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
-		} else { // tipo = "AUDIO"
+		} else if (tipo.equalsIgnoreCase("AUDIO")) {
 			while (AudioGUI.audio.recording || !AudioGUI.audio.stopped) { /* não faz nada enquanto o áudio estiver sendo gravado */ }
 			new CopiaArquivos("sampleaudio.wav", InicialGUI.aProjetos.getCaminho() + "\\" + AudioGUI.tfNomeAudio.getText() + ".wav");
 			InicialGUI.aProjetos.addFilho(AudioGUI.tfNomeAudio.getText() + ".wav");
 			tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + AudioGUI.tfNomeAudio.getText() + ".wav");
+		} else { // tipo = "ANIMACAO"
+			InicialGUI.aProjetos.addFilho(AnimacaoGUI.tfNome.getText() + ".gif");
+			tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + AnimacaoGUI.tfNome.getText() + ".gif");
 		}
 		bOK.setEnabled(true);
 	}
-
+	
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

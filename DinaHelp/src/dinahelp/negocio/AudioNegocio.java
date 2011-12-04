@@ -1,6 +1,7 @@
 package dinahelp.negocio;
 
 import java.io.*;
+import java.lang.management.GarbageCollectorMXBean;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.AudioFormat;
@@ -176,6 +177,7 @@ public class AudioNegocio extends Thread {
 	 *  once every time at the start of recording.
 	 */
 	public void init() {
+
 		/*  First of all, make sure the line isn't already running. */
 		if (m_line != null) {
 			stopRecording();
@@ -191,10 +193,12 @@ public class AudioNegocio extends Thread {
 		 *  If requesting the line was successful, it is opened.
 		 */
 		/** Try to get a buffer of 1s. */
-		DataLine.Info info = new DataLine.Info(TargetDataLine.class,
-				audioFormat, (int) (frequency * sampleSizeInBytes));
+		DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat, (int) (frequency * sampleSizeInBytes));
 		TargetDataLine targetDataLine = null;
 		try {
+			//	if(info.getMaxBufferSize()) {
+			//	DataLine.Info infoAux = new DataLine.Info(TargetDataLine.class, audioFormat, (int) (frequency * sampleSizeInBytes));
+			//	}
 			targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
 			/** Use the maximum buffersize available. */
 			targetDataLine.open(audioFormat, info.getMaxBufferSize());

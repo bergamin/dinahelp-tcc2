@@ -23,9 +23,9 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 
 	public AudioGUI() {
 
+		initComponents();
 		criaAudio();
 
-		initComponents();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -84,7 +84,6 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bFimGrava;
     private javax.swing.JButton bIniGrava;

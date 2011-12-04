@@ -210,7 +210,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			}
 		}
 	}
-	
+
 	/** Cria um VideoNegocio e inicia sua Thread */
 	private void criaVideo() {
 		video = new VideoNegocio(retangulo, fps);

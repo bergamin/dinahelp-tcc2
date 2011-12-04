@@ -31,6 +31,9 @@ public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListene
 		initComponents();
 		caminho = InicialGUI.aProjetos.getCaminho();
 		this.origem = origem;
+		if (origem.equalsIgnoreCase("EDICAO")) {
+			txfTitulo.setEnabled(false);
+		}
 	}
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -133,6 +136,8 @@ public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListene
 							ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
 							ajudaTextual.setTexto(txaEditTexto.getText());
 							ajudaNegocio.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
+							origem = "EDICAO";
+							caminho += "\\" + txfTitulo.getText() + ".doc";
 						} else {
 							JOptionPane.showMessageDialog(null, "Arquivo já existente!");
 						}

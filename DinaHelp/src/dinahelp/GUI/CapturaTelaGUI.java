@@ -35,6 +35,7 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
+        setUndecorated(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -52,7 +53,6 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
 	/** Eventos de mouse */
 	@Override
 	public void mousePressed(MouseEvent e) {

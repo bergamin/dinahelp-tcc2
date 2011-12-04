@@ -3,7 +3,6 @@
  * ESTA CLASSE NÃO É MAIS USADA!!!
  * REMOVER ISSO E O MENU TAMBÉM!!!
  */
-
 package dinahelp.GUI;
 
 import javax.swing.JOptionPane;

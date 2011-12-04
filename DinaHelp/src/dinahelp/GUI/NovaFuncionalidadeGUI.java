@@ -15,7 +15,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	/** Comando dos botões */
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
-	
+
 	public NovaFuncionalidadeGUI() {
 		initComponents();
 	}
@@ -74,7 +74,6 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbNovaFuncCancelar;
     private javax.swing.JButton jbNovaFuncOK;

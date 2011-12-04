@@ -32,7 +32,8 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 	private static String COMANDO_ABRIR = "COMANDO_ABRIR";
 	/**
 	 * Futuramente criar um arquivo de configuração com todas as configurações
-	 * (workspace, fps, qualidade, etc) e ler aqui.
+	 * (workspace, fps, qualidade, etc) e ler aqui. Pode-se ter ainda uma tela
+	 * configuração que altera os dados deste arquivo.
 	 */
 	public static Config config = new Config("C:\\DinaHelp");
 
@@ -199,7 +200,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 		np.setVisible(true);
 
 	}//GEN-LAST:event_miNovoProjetoActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bAddFunc;
     private javax.swing.JButton bAnimacao;

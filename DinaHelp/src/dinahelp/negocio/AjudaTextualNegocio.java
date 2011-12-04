@@ -13,10 +13,10 @@ import java.io.PrintWriter;
  * @author Felipe Bochehin
  */
 public class AjudaTextualNegocio {
-	
+
 	/** Arquivo .doc da ajuda textual */
 	private File arquivoTexto;
-	
+
 	/** Cria o arquivo .doc */
 	public void geraArquivoAjudaTextual(String caminho, String nomeArquivo, String texto) {
 		try {
@@ -28,7 +28,7 @@ public class AjudaTextualNegocio {
 		} catch (IOException e) {
 		}
 	}
-	
+
 	/** Retorna o texto do arquivo .doc passado por parâmetro */
 	@SuppressWarnings("CallToThreadDumpStack")
 	public String carregarArquivoAjudaTextual(String caminho) {
@@ -36,16 +36,13 @@ public class AjudaTextualNegocio {
 			arquivoTexto = new File(caminho);
 			BufferedReader buffer = new BufferedReader(new FileReader(arquivoTexto));
 			String str = "";
-			
-			/**
-			 * Adiciona linha a linha o arquivo texto para retorno.
-			 * \r é necessário pois o Windows precisa dele além do \n.
-			 */
+
 			while (buffer.ready()) {
-				if (str.isEmpty())
+				if (str.isEmpty()) {
 					str = str + buffer.readLine();
-				else
-					str = str +"\r\n"+ buffer.readLine();
+				} else {
+					str = str + "\r\n" + buffer.readLine();
+				}
 			}
 			return str;
 		} catch (IOException e) {
@@ -53,7 +50,7 @@ public class AjudaTextualNegocio {
 		}
 		return "";
 	}
-	
+
 	/** Salva arquivo já criado que está sendo editado */
 	@SuppressWarnings("CallToThreadDumpStack")
 	public void editarArquivoAjudaTextual(String caminho, String texto) {

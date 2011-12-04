@@ -4,7 +4,12 @@ import dinahelp.negocio.AnimacaoNegocio;
 import dinahelp.util.Validador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,7 +22,7 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
 	/** Comandos dos botões */
 	private static String COMANDO_GERAR = "COMANDO_GERAR";
 	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
-	public static AnimacaoNegocio animacao;
+	public static AnimacaoNegocio animacao = new AnimacaoNegocio();
 
 	/** Construtor */
 	public AnimacaoGUI() {
@@ -97,7 +102,7 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField tfDiretorio;
-    private javax.swing.JTextField tfNome;
+    public static javax.swing.JTextField tfNome;
     // End of variables declaration//GEN-END:variables
 
 	/** Execução dos comandos dos botões */
@@ -109,15 +114,24 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "Deve-se informar o diretório origem das imagens");
 			} else if (tfNome.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Deve-se informar o nome do arquivo");
-			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNome.getText() + ".mov")) {
-				JOptionPane.showMessageDialog(null, "Arquivo já existente com este nome!");
+			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNome.getText() + ".gif")) {
+				JOptionPane.showMessageDialog(null, "Arquivo já existente");
+			} else if (!Validador.caminhoExistente(tfDiretorio.getText())) {
+				JOptionPane.showMessageDialog(null, "Diretório inexistente");
 			} else if (Validador.nomeValido(tfNome.getText())) {
-				File[] listaImagens = new File(tfDiretorio.getText()).listFiles();
-				animacao = new AnimacaoNegocio(listaImagens);
-				long tempoSinc = System.currentTimeMillis();
-				animacao.setSyncTime(tempoSinc);
-				animacao.setNaoTerminado(true);
-				animacao.wakeUp();
+				try {
+					File[] imagensFile = new File(tfDiretorio.getText()).listFiles();
+					BufferedImage[] imagensBuffered = new BufferedImage[imagensFile.length];
+					for (int i = 0; i <= imagensFile.length - 1; i++) {
+						imagensBuffered[i] = ImageIO.read(imagensFile[i]);
+					}
+					animacao.saveImageArrayAsAnimatedGif(imagensBuffered, new File(InicialGUI.aProjetos.getCaminho() + "\\" + tfNome.getText() + ".gif"));
+					dispose();
+					ConfirmaArquivoGUI confirmaAnimacao = new ConfirmaArquivoGUI("ANIMACAO");
+					confirmaAnimacao.setVisible(true);
+				} catch (IOException ex) {
+					Logger.getLogger(AnimacaoGUI.class.getName()).log(Level.SEVERE, null, ex);
+				}
 			}
 		} else if (COMANDO_CANCELAR.equals(comando)) {
 			dispose();
