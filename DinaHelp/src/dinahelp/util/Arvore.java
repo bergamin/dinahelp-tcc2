@@ -91,13 +91,18 @@ public class Arvore extends JPanel {
 	}
 
 	public String getCaminho() {
-		String retorno = arvore.getSelectionPath().toString();
-		retorno = retorno.replace(',', '\\');
-		retorno = retorno.substring(1, retorno.length() - 1);
-		retorno = removeChar(retorno, '[');
-		retorno = removeChar(retorno, ']');
-		retorno = retorno.replace("\\ ", "\\");
-		return InicialGUI.config.getWorkspace() + "\\" + retorno;
+		if (arvore.getSelectionPath() != null) {
+			String retorno = arvore.getSelectionPath().toString();
+			retorno = retorno.replace(',', '\\');
+			retorno = retorno.substring(1, retorno.length() - 1);
+			retorno = removeChar(retorno, '[');
+			retorno = removeChar(retorno, ']');
+			retorno = retorno.replace("\\ ", "\\");
+			retorno = InicialGUI.config.getWorkspace() + "\\" + retorno;
+			return retorno;
+		} else {
+			return null;
+		}
 	}
 
 	public static String removeChar(String s, char c) {

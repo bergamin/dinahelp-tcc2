@@ -32,7 +32,7 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
 		}
 		bOK.setEnabled(true);
 	}
-	
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -41,7 +41,7 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
         bOK = new javax.swing.JButton();
         tfCaminhoArquivo = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Arquivo criado com sucesso");
 
         lblCarregamento.setText("Arquivo criado com sucesso:");
@@ -84,6 +84,7 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void bOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOKActionPerformed
+		DinaHelp.inicial.setEnabled(true);
 		dispose();
 	}//GEN-LAST:event_bOKActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -47,7 +47,7 @@ public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListene
         btnCancelar = new javax.swing.JButton();
         btnSalvaSair = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Ajuda Textual");
 
         txaEditTexto.setColumns(20);
@@ -120,6 +120,7 @@ public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListene
 		String comando = e.getActionCommand();
 
 		if (COMANDO_CANCELAR.equals(comando)) {
+			DinaHelp.inicial.setEnabled(true);
 			dispose();
 		} else { // SALVAR ou SALVAR_SAIR
 			AjudaTextualNegocio ajudaNegocio = new AjudaTextualNegocio();
@@ -145,46 +146,9 @@ public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListene
 				}
 			}
 			if (COMANDO_SALVAR_SAIR.equals(comando)) {
+				DinaHelp.inicial.setEnabled(true);
 				dispose();
 			}
 		}
-
-		////////////////////////////////////////////////////////////////////////
-
-//		if (COMANDO_SALVAR.equals(comando)) {
-//			if (txfTitulo.getText().isEmpty()) {
-//				JOptionPane.showMessageDialog(null, "O nome do arquivo deve ser preenchido");
-//			} else {
-//				if (Validador.nomeValido(txfTitulo.getText())) {
-//					if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
-//						InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
-//					} else {
-//						JOptionPane.showMessageDialog(null, "Arquivo já existente!");
-//					}
-//					AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-//					AjudaTextual ajudaTextual = new AjudaTextual();
-//					ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-//					ajudaTextual.setTexto(txaEditTexto.getText());
-//					//Pegar o getNome() da funcionalidade para passar o caminho
-//					gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
-//				}
-//			}
-//		} else if (COMANDO_SALVAR_SAIR.equals(comando)) {
-//			// VER COMO FAZER PARA ELE NÃO ESCREVER POR CIMA CASO ESTIVER ABRINDO UM NOVO COM O MESMO NOME
-//			if (Validador.nomeValido(txfTitulo.getText())) {
-//				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + txfTitulo.getText() + ".doc")) {
-//					InicialGUI.aProjetos.addFilho(txfTitulo.getText() + ".doc");
-//				}
-//				AjudaTextualNegocio gravaAjudaTextual = new AjudaTextualNegocio();
-//				AjudaTextual ajudaTextual = new AjudaTextual();
-//				ajudaTextual.setNomeAjuda(txfTitulo.getText() + ".doc");
-//				ajudaTextual.setTexto(txaEditTexto.getText());
-//				//Pegar o getNome() da funcionalidade para passar o caminho
-//				gravaAjudaTextual.geraArquivoAjudaTextual(caminho, ajudaTextual.getNomeAjuda(), ajudaTextual.getTexto());
-//				dispose();
-//			}
-//		} else if (COMANDO_CANCELAR.equals(comando)) {
-//			dispose();
-//		}
 	}
 }

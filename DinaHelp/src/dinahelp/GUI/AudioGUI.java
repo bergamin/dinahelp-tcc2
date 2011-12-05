@@ -1,8 +1,10 @@
 package dinahelp.GUI;
 
 import dinahelp.negocio.AudioNegocio;
+import dinahelp.util.Validador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -37,7 +39,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
         bIniGrava = new javax.swing.JButton();
         bFimGrava = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Gravar Áudio");
         setResizable(false);
 
@@ -50,6 +52,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 
         bFimGrava.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/parar.png"))); // NOI18N
         bFimGrava.setActionCommand(COMANDO_PARA);
+        bFimGrava.setEnabled(false);
         bFimGrava.addActionListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -97,19 +100,28 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 
 		if (COMANDO_GRAVA.equals(comando)) {
 
-			long tempoSinc = System.currentTimeMillis();
-			audio.setSyncTime(tempoSinc);
-			audio.stopped = false;
-			audio.wakeUp();
-
+			if (tfNomeAudio.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Deve-se informar o nome do arquivo");
+			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeAudio.getText() + ".wav")) {
+				JOptionPane.showMessageDialog(null, "Arquivo já existente");
+			} else if (Validador.nomeValido(tfNomeAudio.getText())) {
+				bIniGrava.setEnabled(false);
+				long tempoSinc = System.currentTimeMillis();
+				audio.setSyncTime(tempoSinc);
+				audio.stopped = false;
+				audio.wakeUp();
+				bFimGrava.setEnabled(true);
+			}
 
 		} else if (COMANDO_PARA.equals(comando)) {
+
 			parando = true;
 			PararThread pararThread = new PararThread();
 			pararThread.setPriority(Thread.MIN_PRIORITY);
 			pararThread.start();
 			ConfirmaArquivoGUI c = new ConfirmaArquivoGUI("AUDIO");
 			c.setVisible(true);
+			DinaHelp.inicial.setEnabled(true);
 			dispose();
 		}
 	}
@@ -126,9 +138,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 	private void parar() throws InterruptedException {
 		Thread.sleep(3000);
 		audio.stopped = true;
-		Thread.sleep(3000);
 		audio.stopRecording();
-		Thread.sleep(3000);
 		while (audio.recording) {
 			audio.hold();
 		}

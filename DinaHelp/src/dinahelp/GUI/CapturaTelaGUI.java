@@ -33,7 +33,7 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
         setUndecorated(true);
 
@@ -91,6 +91,7 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 			VideoGUI.largura = ct.getLargura();
 			VideoGUI.altura = ct.getAltura();
 		}
+		DinaHelp.inicial.setEnabled(true);
 		dispose();
 	}
 

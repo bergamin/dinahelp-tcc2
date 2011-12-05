@@ -2,6 +2,7 @@ package dinahelp.GUI;
 
 import com.sun.awt.AWTUtilities;
 import dinahelp.negocio.VideoNegocio;
+import dinahelp.util.Validador;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -60,7 +61,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
         tfNomeVideo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Ajuda em vídeo");
         setResizable(false);
 
@@ -71,6 +72,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
         bFimGrava.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dinahelp/util/imagens/parar.png"))); // NOI18N
         bFimGrava.setActionCommand(COMANDO_PARA);
+        bFimGrava.setEnabled(false);
         bFimGrava.addActionListener(this);
 
         bArea.setText("Sel. Área");
@@ -156,8 +158,10 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
 			} else if (tfNomeVideo.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Deve-se escolher um nome para o arquivo de vídeo.");
-			} else {
-
+			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeVideo.getText()+".mov")){
+				JOptionPane.showMessageDialog(null, "Arquivo já existente");
+			} else if (Validador.nomeValido(tfNomeVideo.getText())) {
+				bIniGrava.setEnabled(false);
 				setExtendedState(JFrame.ICONIFIED);
 				DinaHelp.inicial.setExtendedState(JFrame.ICONIFIED);
 
@@ -167,12 +171,13 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 					altura = Toolkit.getDefaultToolkit().getScreenSize().height;
 				}
 				retangulo.setBounds(x, y, largura, altura);
-				// Iniciar gravação sincronizada - ERA USADO PARA SINCRONIZAR COM O ÁUDIO, MAS NO FIM, DESENVOLVEMOS SEM ÁUDIO
+				// Iniciar sincronização
 				long tempoSinc = System.currentTimeMillis();
 				video.setSyncTime(tempoSinc);
 				// Inicia gravação do vídeo
 				video.setNaoTerminado(true);
 				video.wakeUp();
+				bFimGrava.setEnabled(true);
 			}
 		} else if (COMANDO_PARA.equals(comando)) {
 			parando = true;
@@ -181,6 +186,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			pararThread.start();
 			ConfirmaArquivoGUI c = new ConfirmaArquivoGUI("VIDEO");
 			c.setVisible(true);
+			DinaHelp.inicial.setEnabled(true);
 			dispose();
 		}
 	}

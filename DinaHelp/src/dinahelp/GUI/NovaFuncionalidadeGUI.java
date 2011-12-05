@@ -4,6 +4,7 @@ import dinahelp.util.Validador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.JOptionPane;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -28,7 +29,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
         jbNovaFuncOK = new javax.swing.JButton();
         jbNovaFuncCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Nova Funcionalidade");
 
         jlNovaFuncNome.setText("Nome:");
@@ -86,15 +87,21 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if (COMANDO_ADD.equals(comando)) {
-			if (Validador.nomeValido(jtfNovaFuncNome.getText())) {
+			if (jtfNovaFuncNome.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Deve-se informar o nome");
+			} else if (Validador.nomeValido(jtfNovaFuncNome.getText())) {
 				if (!Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText())) {
 					InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
 					File dir = new File(InicialGUI.aProjetos.getCaminho() + "\\" + jtfNovaFuncNome.getText());
 					dir.mkdirs();
+					DinaHelp.inicial.setEnabled(true);
 					dispose();
+				} else {
+					InicialGUI.aProjetos.addFilho(jtfNovaFuncNome.getText());
 				}
 			}
 		} else if (COMANDO_CANCELAR.equals(comando)) {
+			DinaHelp.inicial.setEnabled(true);
 			dispose();
 		}
 	}

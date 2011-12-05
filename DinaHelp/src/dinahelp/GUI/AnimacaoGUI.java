@@ -40,7 +40,7 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
         jLabel2 = new javax.swing.JLabel();
         tfNome = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Gerar Animação");
 
         jLabel1.setText("Diretório:");
@@ -126,6 +126,7 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
 						imagensBuffered[i] = ImageIO.read(imagensFile[i]);
 					}
 					animacao.saveImageArrayAsAnimatedGif(imagensBuffered, new File(InicialGUI.aProjetos.getCaminho() + "\\" + tfNome.getText() + ".gif"));
+					DinaHelp.inicial.setEnabled(true);
 					dispose();
 					ConfirmaArquivoGUI confirmaAnimacao = new ConfirmaArquivoGUI("ANIMACAO");
 					confirmaAnimacao.setVisible(true);
@@ -134,6 +135,7 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
 				}
 			}
 		} else if (COMANDO_CANCELAR.equals(comando)) {
+			DinaHelp.inicial.setEnabled(true);
 			dispose();
 		}
 	}

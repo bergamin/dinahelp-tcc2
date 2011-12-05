@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  * @author Guilherme Taffarel Bergamin
@@ -57,10 +58,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
         bRemFunc = new javax.swing.JButton();
         aProjetos = new Arvore();
         spProjetos = new javax.swing.JScrollPane();
-        mbInicial = new javax.swing.JMenuBar();
-        mInicialArquivo = new javax.swing.JMenu();
-        miNovoProjeto = new javax.swing.JMenuItem();
-        mInicialAjuda = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DinaHelp");
@@ -114,23 +111,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
         spProjetos.setAlignmentX(LEFT_ALIGNMENT);
         spProjetos.setEnabled(false);
 
-        mInicialArquivo.setText("Arquivo");
-
-        miNovoProjeto.setText("Novo Projeto");
-        miNovoProjeto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miNovoProjetoActionPerformed(evt);
-            }
-        });
-        mInicialArquivo.add(miNovoProjeto);
-
-        mbInicial.add(mInicialArquivo);
-
-        mInicialAjuda.setText("Ajuda");
-        mbInicial.add(mInicialAjuda);
-
-        setJMenuBar(mbInicial);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,7 +162,7 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
                         .addGap(18, 18, 18)
                         .addComponent(sProjetos, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                .addComponent(spProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bAddFunc)
@@ -193,13 +173,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-	private void miNovoProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNovoProjetoActionPerformed
-		// verificar se o projeto já existe (ver as pastas já criadas)
-		NovoProjetoGUI np = new NovoProjetoGUI();
-		np.setVisible(true);
-
-	}//GEN-LAST:event_miNovoProjetoActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bAddFunc;
     private javax.swing.JButton bAnimacao;
@@ -211,10 +184,6 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton bVideo;
     private javax.swing.JLabel lFerramentas;
     private javax.swing.JLabel lProjetos;
-    private javax.swing.JMenu mInicialAjuda;
-    private javax.swing.JMenu mInicialArquivo;
-    private javax.swing.JMenuBar mbInicial;
-    private javax.swing.JMenuItem miNovoProjeto;
     private javax.swing.JSeparator sProjetos;
     public static Arvore aProjetos;
     private javax.swing.JScrollPane spProjetos;
@@ -225,59 +194,69 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 	@SuppressWarnings("static-access")
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
-
-		if (COMANDO_ADD.equals(comando)) {
-			if (!aProjetos.getCaminho().contains(".")) {
-				NovaFuncionalidadeGUI novaFuncionalidade = new NovaFuncionalidadeGUI();
-				novaFuncionalidade.setVisible(true);
-			}
-		} else if (COMANDO_REMOVE.equals(comando)) {
-			aProjetos.removeNodo();
-		} else if (COMANDO_TEXTO.equals(comando)) {
-			if (!aProjetos.getCaminho().contains(".")) {
-				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI("CRIACAO");
-				ajudaTextual.setVisible(true);
-			}
-		} else if (COMANDO_SCREENSHOT.equals(comando)) {
-			if (!aProjetos.getCaminho().contains(".")) {
-				setExtendedState(JFrame.ICONIFIED);
-				CapturaTelaGUI capturaTela = new CapturaTelaGUI('I');
-				capturaTela.setExtendedState(MAXIMIZED_BOTH);
-				AWTUtilities.setWindowOpacity(capturaTela, 0.5f);
-				capturaTela.setVisible(true);
-			}
-		} else if (COMANDO_VIDEO.equals(comando)) {
-			if (!aProjetos.getCaminho().contains(".")) {
-				VideoGUI video = new VideoGUI();
-				video.setVisible(true);
-			}
-		} else if (COMANDO_ANIMACAO.equals(comando)) {
-			if (!aProjetos.getCaminho().contains(".")) {
-				AnimacaoGUI animacao = new AnimacaoGUI();
-				animacao.setVisible(true);
-			}
-		} else if (COMANDO_AUDIO.equals(comando)) {
-			if (!aProjetos.getCaminho().contains(".")) {
-				AudioGUI audio = new AudioGUI();
-				audio.setVisible(true);
-			}
-		} else if (COMANDO_ABRIR.equals(comando)) {
-			if (aProjetos.getCaminho().contains(".doc")) {
-				AjudaTextualNegocio ajudaTNegocio = new AjudaTextualNegocio();
-				AjudaTextualGUI ajudaTextual = new AjudaTextualGUI("EDICAO");
-				int index = aProjetos.getCaminho().lastIndexOf("\\");
-				ajudaTextual.txfTitulo.setText(aProjetos.getCaminho().substring(index + 1, aProjetos.getCaminho().length() - 4));
-				ajudaTextual.txaEditTexto.setText(ajudaTNegocio.carregarArquivoAjudaTextual(aProjetos.getCaminho()));
-				ajudaTextual.setVisible(true);
-			} else {
-				try {
-					Desktop desktop = Desktop.getDesktop();
-					desktop.open(new File(aProjetos.getCaminho()));
-				} catch (IOException ex) {
-					Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);
+		if (aProjetos.getCaminho() != null) {
+			if (COMANDO_ADD.equals(comando)) {
+				if (!aProjetos.getCaminho().contains(".")) {
+					setEnabled(false);
+					NovaFuncionalidadeGUI novaFuncionalidade = new NovaFuncionalidadeGUI();
+					novaFuncionalidade.setVisible(true);
+				}
+			} else if (COMANDO_REMOVE.equals(comando)) {
+				aProjetos.removeNodo();
+			} else if (COMANDO_TEXTO.equals(comando)) {
+				if (!aProjetos.getCaminho().contains(".")) {
+					setEnabled(false);
+					AjudaTextualGUI ajudaTextual = new AjudaTextualGUI("CRIACAO");
+					ajudaTextual.setVisible(true);
+				}
+			} else if (COMANDO_SCREENSHOT.equals(comando)) {
+				if (!aProjetos.getCaminho().contains(".")) {
+					setEnabled(false);
+					setExtendedState(JFrame.ICONIFIED);
+					CapturaTelaGUI capturaTela = new CapturaTelaGUI('I');
+					capturaTela.setExtendedState(MAXIMIZED_BOTH);
+					AWTUtilities.setWindowOpacity(capturaTela, 0.5f);
+					capturaTela.setVisible(true);
+				}
+			} else if (COMANDO_VIDEO.equals(comando)) {
+				if (!aProjetos.getCaminho().contains(".")) {
+					setEnabled(false);
+					VideoGUI video = new VideoGUI();
+					video.setVisible(true);
+				}
+			} else if (COMANDO_ANIMACAO.equals(comando)) {
+				if (!aProjetos.getCaminho().contains(".")) {
+					setEnabled(false);
+					AnimacaoGUI animacao = new AnimacaoGUI();
+					animacao.setVisible(true);
+				}
+			} else if (COMANDO_AUDIO.equals(comando)) {
+				if (!aProjetos.getCaminho().contains(".")) {
+					setEnabled(false);
+					AudioGUI audio = new AudioGUI();
+					audio.setVisible(true);
+				}
+			} else if (COMANDO_ABRIR.equals(comando)) {
+				if (aProjetos.getCaminho().contains(".doc")) {
+					setEnabled(false);
+					AjudaTextualNegocio ajudaTNegocio = new AjudaTextualNegocio();
+					AjudaTextualGUI ajudaTextual = new AjudaTextualGUI("EDICAO");
+					int index = aProjetos.getCaminho().lastIndexOf("\\");
+					ajudaTextual.txfTitulo.setText(aProjetos.getCaminho().substring(index + 1, aProjetos.getCaminho().length() - 4));
+					ajudaTextual.txaEditTexto.setText(ajudaTNegocio.carregarArquivoAjudaTextual(aProjetos.getCaminho()));
+					ajudaTextual.setVisible(true);
+				} else {
+					try {
+						Desktop desktop = Desktop.getDesktop();
+						desktop.open(new File(aProjetos.getCaminho()));
+					} catch (IOException ex) {
+						Logger.getLogger(InicialGUI.class.getName()).log(Level.SEVERE, null, ex);
+					}
 				}
 			}
 			repaint();
+		} else {
+			JOptionPane.showMessageDialog(null, "Deve-se selecionar uma item da árvore");
 		}
 	}
 }
