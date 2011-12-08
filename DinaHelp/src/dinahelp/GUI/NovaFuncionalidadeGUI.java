@@ -17,6 +17,7 @@ public class NovaFuncionalidadeGUI extends javax.swing.JFrame implements ActionL
 	private static String COMANDO_ADD = "COMANDO_ADD";
 	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
 
+	/** Construtor */
 	public NovaFuncionalidadeGUI() {
 		initComponents();
 	}

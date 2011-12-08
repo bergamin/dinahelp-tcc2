@@ -168,15 +168,15 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 				bArea.setEnabled(true);
 			}
 		} else if (COMANDO_GRAVA.equals(comando)) {
-			
+
 			if (!cbTelaInteira.isSelected() && x == 0 && y == 0 && largura == 0 && altura == 0) {
 				JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
 			} else if (tfNomeVideo.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Deve-se escolher um nome para o arquivo de vídeo.");
-			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeVideo.getText()+".mov")){
+			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeVideo.getText() + ".mov")) {
 				JOptionPane.showMessageDialog(null, "Arquivo já existente");
 			} else if (Validador.nomeValido(tfNomeVideo.getText())) {
-				
+
 				bIniGrava.setEnabled(false);
 				bCancelar.setEnabled(false);
 				setExtendedState(JFrame.ICONIFIED);
@@ -194,9 +194,9 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 				video.wakeUp();
 				bFimGrava.setEnabled(true);
 			}
-			
+
 		} else if (COMANDO_PARA.equals(comando)) {
-			
+
 			parando = true;
 			PararThread pararThread = new PararThread();
 			pararThread.setPriority(Thread.MIN_PRIORITY);
@@ -205,15 +205,16 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			c.setVisible(true);
 			DinaHelp.inicial.setEnabled(true);
 			dispose();
-			
-		} else if(COMANDO_CANCELAR.equals(comando)){
-			
+
+		} else if (COMANDO_CANCELAR.equals(comando)) {
+
 			DinaHelp.inicial.setEnabled(true);
 			dispose();
-			
+
 		}
 	}
 
+	/** Parar gravação */
 	private void parar() {
 
 		video.naoTerminado = false;
@@ -222,10 +223,10 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			video.hold();
 		}
 
-		// Encode do vídeo
 		video.encode();
 	}
 
+	/** Thread que pára a thread que está rodando no momento */
 	private class PararThread extends Thread {
 
 		@Override

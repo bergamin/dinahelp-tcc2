@@ -24,6 +24,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 	/** Parando a gravação */
 	private boolean parando = false;
 
+	/** Construtor */
 	public AudioGUI() {
 		initComponents();
 	}
@@ -102,6 +103,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
     public static javax.swing.JTextField tfNomeAudio;
     // End of variables declaration//GEN-END:variables
 
+	/** Execução dos comandos dos botões */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
@@ -113,12 +115,12 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeAudio.getText() + ".wav")) {
 				JOptionPane.showMessageDialog(null, "Arquivo já existente");
 			} else if (Validador.nomeValido(tfNomeAudio.getText())) {
-				
+
 				bIniGrava.setEnabled(false);
 				bCancelar.setEnabled(false);
-				
+
 				criaAudio();
-				
+
 				long tempoSinc = System.currentTimeMillis();
 				audio.setSyncTime(tempoSinc);
 				audio.parado = false;
@@ -134,18 +136,19 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 			pararThread.start();
 			ConfirmaArquivoGUI c = new ConfirmaArquivoGUI("AUDIO");
 			c.setVisible(true);
-			
+
 			DinaHelp.inicial.setEnabled(true);
 			dispose();
-			
-		} else if(COMANDO_CANCELAR.equals(comando)){
-			
+
+		} else if (COMANDO_CANCELAR.equals(comando)) {
+
 			DinaHelp.inicial.setEnabled(true);
 			dispose();
-			
+
 		}
 	}
 
+	/** Cria e inicia a thread de áudio */
 	private void criaAudio() {
 		audio = new AudioNegocio();
 		audio.canais = 1;
@@ -155,6 +158,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 		audio.start();
 	}
 
+	/** Pára a gravação do áudio */
 	private void parar() throws InterruptedException {
 		Thread.sleep(3000);
 		audio.parado = true;
@@ -164,6 +168,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 		}
 	}
 
+	/** Thread utilizada para parar a thread que está rodando no momento */
 	private class PararThread extends Thread {
 
 		@Override

@@ -83,6 +83,7 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	/** Execução do botão OK */
 	private void bOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOKActionPerformed
 		DinaHelp.inicial.setEnabled(true);
 		dispose();

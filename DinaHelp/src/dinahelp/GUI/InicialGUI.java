@@ -37,7 +37,8 @@ public class InicialGUI extends javax.swing.JFrame implements ActionListener {
 	 * configuração que altera os dados deste arquivo.
 	 */
 	public static Config config = new Config("C:\\DinaHelp");
-	
+
+	/** Construtor */
 	public InicialGUI() {
 		initComponents();
 	}

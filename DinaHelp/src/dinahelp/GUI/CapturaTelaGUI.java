@@ -21,6 +21,7 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 	/** tipo de captura (vídeo ou captura estática) */
 	private char tipo;
 
+	/** Construtor */
 	@SuppressWarnings("LeakingThisInConstructor")
 	public CapturaTelaGUI(char tipo) {
 		this.tipo = tipo;
@@ -104,7 +105,7 @@ public class CapturaTelaGUI extends javax.swing.JFrame implements MouseListener,
 		repaint();
 	}
 
-	/** desenha a reta */
+	/** desenha as linhas do retângulo */
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); // Limpa a tela

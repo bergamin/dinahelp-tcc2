@@ -115,6 +115,7 @@ public class AjudaTextualGUI extends javax.swing.JFrame implements ActionListene
     public static javax.swing.JTextField txfTitulo;
     // End of variables declaration//GEN-END:variables
 
+	/** Execução dos Botões */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();

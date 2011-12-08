@@ -256,9 +256,7 @@ public class VideoNegocio extends Thread {
 			dumper.start();
 			dumper.waitFor();
 		} catch (Exception e) {
-			System.err.println(e);
 		} catch (OutOfMemoryError o) {
-			System.out.println(o);
 		}
 	}
 
@@ -266,7 +264,6 @@ public class VideoNegocio extends Thread {
 		try {
 			wait(3000);
 		} catch (InterruptedException ie) {
-			System.err.println(ie);
 		}
 	}
 
@@ -287,7 +284,6 @@ public class VideoNegocio extends Thread {
 			try {
 				data.writeInt(intArray[cnt]);
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 		return temp.toByteArray();
@@ -368,7 +364,6 @@ public class VideoNegocio extends Thread {
 						hold();
 					}
 				} catch (Exception e) {
-					System.err.println(e);
 				}
 			}
 		}
@@ -381,7 +376,6 @@ public class VideoNegocio extends Thread {
 			imagens.fis.close();
 			imagens.arquivo.delete();
 		} catch (Exception e) {
-			System.out.println(e);
 		}
 		imagens.tamanhoImagens = null;
 		imagens.framesPerdidos = null;
@@ -391,7 +385,6 @@ public class VideoNegocio extends Thread {
 				init();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
 		}
 		inicializando = false;
 		wakeUp();
