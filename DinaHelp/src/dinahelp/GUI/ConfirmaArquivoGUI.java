@@ -22,7 +22,7 @@ public class ConfirmaArquivoGUI extends javax.swing.JFrame {
 			InicialGUI.aProjetos.addFilho(VideoGUI.tfNomeVideo.getText() + ".mov");
 			tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + VideoGUI.tfNomeVideo.getText() + ".mov");
 		} else if (tipo.equalsIgnoreCase("AUDIO")) {
-			while (AudioGUI.audio.recording || !AudioGUI.audio.stopped) { /* não faz nada enquanto o áudio estiver sendo gravado */ }
+			while (AudioGUI.audio.gravando || !AudioGUI.audio.parado) { /* não faz nada enquanto o áudio estiver sendo gravado */ }
 			new CopiaArquivos("sampleaudio.wav", InicialGUI.aProjetos.getCaminho() + "\\" + AudioGUI.tfNomeAudio.getText() + ".wav");
 			InicialGUI.aProjetos.addFilho(AudioGUI.tfNomeAudio.getText() + ".wav");
 			tfCaminhoArquivo.setText(InicialGUI.aProjetos.getCaminho() + "\\" + AudioGUI.tfNomeAudio.getText() + ".wav");

@@ -22,6 +22,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 	private static String COMANDO_TELAINTEIRA = "COMANDO_TELAINTEIRA";
 	private static String COMANDO_GRAVA = "COMANDO_GRAVA";
 	private static String COMANDO_PARA = "COMANDO_PARA";
+	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
 	/** Área de captura */
 	public static int x;
 	public static int y;
@@ -60,6 +61,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
         cbTelaInteira = new javax.swing.JCheckBox();
         tfNomeVideo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        bCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Ajuda em vídeo");
@@ -85,26 +87,35 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 
         jLabel1.setText("Nome:");
 
+        bCancelar.setText("Cancelar");
+        bCancelar.setActionCommand(COMANDO_CANCELAR);
+        bCancelar.addActionListener(this);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfNomeVideo, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfNomeVideo, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(bArea)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbTelaInteira))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(bArea)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbTelaInteira))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bFimGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(bCancelar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bFimGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,21 +125,24 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tfNomeVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bArea)
                     .addComponent(cbTelaInteira))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bFimGrava, 0, 0, Short.MAX_VALUE)
-                    .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bCancelar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bArea;
+    private javax.swing.JButton bCancelar;
     private javax.swing.JButton bFimGrava;
     private javax.swing.JButton bIniGrava;
     private javax.swing.JCheckBox cbTelaInteira;
@@ -154,6 +168,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 				bArea.setEnabled(true);
 			}
 		} else if (COMANDO_GRAVA.equals(comando)) {
+			
 			if (!cbTelaInteira.isSelected() && x == 0 && y == 0 && largura == 0 && altura == 0) {
 				JOptionPane.showMessageDialog(null, "Deve-se selecionar a area a ser gravada.");
 			} else if (tfNomeVideo.getText().isEmpty()) {
@@ -161,7 +176,9 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeVideo.getText()+".mov")){
 				JOptionPane.showMessageDialog(null, "Arquivo já existente");
 			} else if (Validador.nomeValido(tfNomeVideo.getText())) {
+				
 				bIniGrava.setEnabled(false);
+				bCancelar.setEnabled(false);
 				setExtendedState(JFrame.ICONIFIED);
 				DinaHelp.inicial.setExtendedState(JFrame.ICONIFIED);
 
@@ -171,15 +188,15 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 					altura = Toolkit.getDefaultToolkit().getScreenSize().height;
 				}
 				retangulo.setBounds(x, y, largura, altura);
-				// Iniciar sincronização
 				long tempoSinc = System.currentTimeMillis();
 				video.setSyncTime(tempoSinc);
-				// Inicia gravação do vídeo
 				video.setNaoTerminado(true);
 				video.wakeUp();
 				bFimGrava.setEnabled(true);
 			}
+			
 		} else if (COMANDO_PARA.equals(comando)) {
+			
 			parando = true;
 			PararThread pararThread = new PararThread();
 			pararThread.setPriority(Thread.MIN_PRIORITY);
@@ -188,6 +205,12 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 			c.setVisible(true);
 			DinaHelp.inicial.setEnabled(true);
 			dispose();
+			
+		} else if(COMANDO_CANCELAR.equals(comando)){
+			
+			DinaHelp.inicial.setEnabled(true);
+			dispose();
+			
 		}
 	}
 

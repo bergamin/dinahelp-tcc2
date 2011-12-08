@@ -16,6 +16,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 	/** Comandos dos botões */
 	private static String COMANDO_GRAVA = "COMANDO_GRAVA";
 	private static String COMANDO_PARA = "COMANDO_PARA";
+	private static String COMANDO_CANCELAR = "COMANDO_CANCELAR";
 	/** Thread de áudio */
 	public static AudioNegocio audio;
 	/** Frequencia */
@@ -24,10 +25,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 	private boolean parando = false;
 
 	public AudioGUI() {
-
 		initComponents();
-		criaAudio();
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -38,6 +36,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
         tfNomeAudio = new javax.swing.JTextField();
         bIniGrava = new javax.swing.JButton();
         bFimGrava = new javax.swing.JButton();
+        bCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Gravar Áudio");
@@ -55,6 +54,10 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
         bFimGrava.setEnabled(false);
         bFimGrava.addActionListener(this);
 
+        bCancelar.setText("Cancelar");
+        bCancelar.setActionCommand(COMANDO_CANCELAR);
+        bCancelar.addActionListener(this);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -64,11 +67,13 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bFimGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tfNomeAudio, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                    .addComponent(tfNomeAudio, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(bCancelar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(bFimGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -82,12 +87,15 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bFimGrava, 0, 0, Short.MAX_VALUE)
                     .addComponent(bIniGrava, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bCancelar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCancelar;
     private javax.swing.JButton bFimGrava;
     private javax.swing.JButton bIniGrava;
     private javax.swing.JLabel jLabel1;
@@ -105,11 +113,16 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 			} else if (Validador.caminhoExistente(InicialGUI.aProjetos.getCaminho() + "\\" + tfNomeAudio.getText() + ".wav")) {
 				JOptionPane.showMessageDialog(null, "Arquivo já existente");
 			} else if (Validador.nomeValido(tfNomeAudio.getText())) {
+				
 				bIniGrava.setEnabled(false);
+				bCancelar.setEnabled(false);
+				
+				criaAudio();
+				
 				long tempoSinc = System.currentTimeMillis();
 				audio.setSyncTime(tempoSinc);
-				audio.stopped = false;
-				audio.wakeUp();
+				audio.parado = false;
+				audio.acordar();
 				bFimGrava.setEnabled(true);
 			}
 
@@ -121,25 +134,32 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 			pararThread.start();
 			ConfirmaArquivoGUI c = new ConfirmaArquivoGUI("AUDIO");
 			c.setVisible(true);
+			
 			DinaHelp.inicial.setEnabled(true);
 			dispose();
+			
+		} else if(COMANDO_CANCELAR.equals(comando)){
+			
+			DinaHelp.inicial.setEnabled(true);
+			dispose();
+			
 		}
 	}
 
 	private void criaAudio() {
 		audio = new AudioNegocio();
-		audio.channels = 1;
-		audio.sampleSize = 16;
-		audio.frequency = frequencia;
+		audio.canais = 1;
+		audio.bitsAudio = 16;
+		audio.frequencia = frequencia;
 		audio.setPriority(Thread.MAX_PRIORITY);
 		audio.start();
 	}
 
 	private void parar() throws InterruptedException {
 		Thread.sleep(3000);
-		audio.stopped = true;
-		audio.stopRecording();
-		while (audio.recording) {
+		audio.parado = true;
+		audio.parar();
+		while (audio.gravando) {
 			audio.hold();
 		}
 	}

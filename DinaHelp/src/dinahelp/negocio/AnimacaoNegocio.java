@@ -13,21 +13,16 @@ import java.io.IOException;
  * @author Felipe Bochehin
  */
 public class AnimacaoNegocio extends Thread {
-
-	public void saveImageArrayAsAnimatedGif(BufferedImage[] images, File fileToSave)
-			throws IOException {
-		// create new GifImage instance
+	
+	/** Encoda as imagens passadas por parâmetro em um arquivo gif */
+	public void imagensParaGIF(BufferedImage[] images, File fileToSave) throws IOException {
 		GifImage gifImage = new GifImage();
-		// set default delay between gif frames
 		gifImage.setDefaultDelay(200);
-		// add comment to gif image
-		gifImage.addComment("Animated GIF image example");
-		// add images wrapped by GifFrame
 		for (int i = 0; i < images.length; i++) {
 			gifImage.addGifFrame(new GifFrame(images[i]));
 		}
-		gifImage.setLoopNumber(Integer.MAX_VALUE);
-		// save animated gif image
+	//	gifImage.setLoopNumber(Integer.MAX_VALUE); // Repetições virtualmente indeterminadas
+		gifImage.setLoopNumber(3);
 		GifEncoder.encode(gifImage, fileToSave);
 	}
 }

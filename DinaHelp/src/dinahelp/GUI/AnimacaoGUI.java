@@ -125,7 +125,7 @@ public class AnimacaoGUI extends javax.swing.JFrame implements ActionListener {
 					for (int i = 0; i <= imagensFile.length - 1; i++) {
 						imagensBuffered[i] = ImageIO.read(imagensFile[i]);
 					}
-					animacao.saveImageArrayAsAnimatedGif(imagensBuffered, new File(InicialGUI.aProjetos.getCaminho() + "\\" + tfNome.getText() + ".gif"));
+					animacao.imagensParaGIF(imagensBuffered, new File(InicialGUI.aProjetos.getCaminho() + "\\" + tfNome.getText() + ".gif"));
 					DinaHelp.inicial.setEnabled(true);
 					dispose();
 					ConfirmaArquivoGUI confirmaAnimacao = new ConfirmaArquivoGUI("ANIMACAO");

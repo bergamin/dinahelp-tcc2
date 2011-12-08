@@ -27,14 +27,14 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jlNovaFuncNome" min="-2" max="-2" attributes="0"/>
+                      <Component id="lNovaFuncNome" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jtfNovaFuncNome" pref="341" max="32767" attributes="1"/>
+                      <Component id="tfNovaFuncNome" pref="341" max="32767" attributes="1"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jbNovaFuncOK" min="-2" pref="75" max="-2" attributes="1"/>
+                      <Component id="bNovaFuncOK" min="-2" pref="75" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jbNovaFuncCancelar" min="-2" max="-2" attributes="1"/>
+                      <Component id="bNovaFuncCancelar" min="-2" max="-2" attributes="1"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -46,13 +46,13 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jlNovaFuncNome" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jtfNovaFuncNome" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lNovaFuncNome" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfNovaFuncNome" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jbNovaFuncCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbNovaFuncOK" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bNovaFuncCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bNovaFuncOK" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -60,14 +60,14 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JTextField" name="jtfNovaFuncNome">
+    <Component class="javax.swing.JTextField" name="tfNovaFuncNome">
     </Component>
-    <Component class="javax.swing.JLabel" name="jlNovaFuncNome">
+    <Component class="javax.swing.JLabel" name="lNovaFuncNome">
       <Properties>
         <Property name="text" type="java.lang.String" value="Nome:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jbNovaFuncOK">
+    <Component class="javax.swing.JButton" name="bNovaFuncOK">
       <Properties>
         <Property name="text" type="java.lang.String" value="OK"/>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -75,10 +75,10 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jbNovaFuncOK.addActionListener(this);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="bNovaFuncOK.addActionListener(this);"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="jbNovaFuncCancelar">
+    <Component class="javax.swing.JButton" name="bNovaFuncCancelar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cancelar"/>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -86,7 +86,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jbNovaFuncCancelar.addActionListener(this);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="bNovaFuncCancelar.addActionListener(this);"/>
       </AuxValues>
     </Component>
   </SubComponents>
