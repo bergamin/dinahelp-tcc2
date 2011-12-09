@@ -13,7 +13,7 @@ import java.io.IOException;
  * @author Felipe Bochehin
  */
 public class AnimacaoNegocio extends Thread {
-	
+
 	/** Encoda as imagens passadas por parâmetro em um arquivo gif */
 	public void imagensParaGIF(BufferedImage[] images, File fileToSave) throws IOException {
 		GifImage gifImage = new GifImage();
@@ -21,7 +21,7 @@ public class AnimacaoNegocio extends Thread {
 		for (int i = 0; i < images.length; i++) {
 			gifImage.addGifFrame(new GifFrame(images[i]));
 		}
-	//	gifImage.setLoopNumber(Integer.MAX_VALUE); // Repetições virtualmente indeterminadas
+		//	gifImage.setLoopNumber(Integer.MAX_VALUE); // Repetições virtualmente indeterminadas
 		gifImage.setLoopNumber(3);
 		GifEncoder.encode(gifImage, fileToSave);
 	}

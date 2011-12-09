@@ -122,7 +122,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 				criaAudio();
 
 				long tempoSinc = System.currentTimeMillis();
-				audio.setSyncTime(tempoSinc);
+				audio.setTempoSinc(tempoSinc);
 				audio.parado = false;
 				audio.acordar();
 				bFimGrava.setEnabled(true);
@@ -164,7 +164,7 @@ public class AudioGUI extends javax.swing.JFrame implements ActionListener {
 		audio.parado = true;
 		audio.parar();
 		while (audio.gravando) {
-			audio.hold();
+			audio.aguardar();
 		}
 	}
 

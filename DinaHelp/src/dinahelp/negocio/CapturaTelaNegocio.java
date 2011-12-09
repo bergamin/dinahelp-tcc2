@@ -16,10 +16,11 @@ import javax.swing.JOptionPane;
  */
 public class CapturaTelaNegocio {
 
+	/** Captura a tela com a área e o caminho passado por parâmetro */
 	public void captura(String caminhoCompleto, int x, int y, int largura, int altura) {
 		try {
 			BufferedImage captura;
-			captura = new Robot().createScreenCapture(new Rectangle(x, y, largura, altura)); //Toolkit.getDefaultToolkit().getScreenSize()) para pegar a tela inteira
+			captura = new Robot().createScreenCapture(new Rectangle(x, y, largura, altura));
 			File arquivo = new File(caminhoCompleto);
 			ImageIO.write(captura, "png", arquivo);
 		} catch (IOException ex) {

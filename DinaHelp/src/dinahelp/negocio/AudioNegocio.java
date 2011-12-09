@@ -35,7 +35,7 @@ public class AudioNegocio extends Thread {
 	/** velocidade do áudio */
 	public float velocidade = 1;
 	/**
-	 * tempo em milisegungos que a gravação espera cada vez que o buffer
+	 * Tempo em milisegungos que a gravação espera cada vez que o buffer
 	 * é limpo
 	 */
 	public long tempoSleep = 900;
@@ -45,12 +45,12 @@ public class AudioNegocio extends Thread {
 	/**	tamanho do buffer de memória para a gravação do arquivo em bytes */
 	private int tamanhoBufferMemoria = 1024 * 1024;
 	/**	arquivo pronto .wav antes de ser copiado para o local selecionado*/
-	private String wavTemp = "sampleaudio.wav";
+	private String wavTemp = "audioTemp.wav";
 	/**
 	 * arquivo temporário de buffer para os dados da gravação serem
 	 * armazenados
 	 */
-	private String bufTemp = "samplebuffer.buf";
+	private String bufTemp = "bufferTemp.buf";
 	/** OutputStream para onde os dados irão */
 	private OutputStream outputStream;
 	/**	DataLine para os dados de áudio */
@@ -62,31 +62,31 @@ public class AudioNegocio extends Thread {
 	/** arquivo onde serão gravados os dados de áudio */
 	private File arquivoSaida = null;
 	/** variáveis usadas no método run() */
-	private int bytesLidos, tamanhoEmBytes, lagAceito, bytesTotal, BytesAdicionados;
+	private int bytesLidos, tamanhoEmBytes, lagAceito, bytesTotal, bytesAdicionados;
 	private int bytesACortar, aceitoAdiante;
 	private int bytesALer, framesPerdidos, bytesPerdidos, tamanhoBuffer;
-	private long tempoAtual, tempoSinc = 0, frameAtual, totalFrames, tamanhoBufferEmFrames;
-	private long checkT, checkT2;
+	private long tempoAtual, tempoSinc = 0, frameAtual; //, totalFrames, tamanhoBufferEmFrames;
 	/** usados para armazenar os dados de gravação. */
-	private byte[] dados, bytesVazios;
+	private byte[] dados; //, bytesVazios;
 	/**
 	 * parâmetros utilizados para trazer a gravação de volta em sincronia
 	 * quando há perda de frames
 	 */
-	private int framesLidos, repFrames, repBonus;
+	private int framesLidos, repFrames; //, repBonus;
 	private int posFrame, frameBonus;
 	/**
 	 * contador de quantas vezes o gravador deve esperar antes de corrigir
 	 * uma gravação com delay
 	 */
-	private int countdown = 1, countup = 4, testeCont = 0;
+	private int countdown = 1, countup = 4; //, testeCont = 0;
 	/** parâmetros utilizados pelo método preencher */
 	private int posiFrame, contIntervalo, intervaloLoop, repCont;
 	private int framesRest, adicionados, contBonus;
-	
+
 	/** Construtor */
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public AudioNegocio() {
-		if (!setAudioFile(wavTemp)) {
+		if (!setArquivoAudio(wavTemp)) {
 			System.out.println("ERRO! Falha ao abrir arquivo de saída " + wavTemp);
 		}
 	}
@@ -114,12 +114,12 @@ public class AudioNegocio extends Thread {
 		tipoArquivo = type;
 
 		tamanhoBuffer = targetDataLine.getBufferSize();
-		tamanhoBufferEmFrames = tamanhoBuffer / tamanhoEmBytes;
+//		tamanhoBufferEmFrames = tamanhoBuffer / tamanhoEmBytes;
 
 		lagAceito = (int) frequencia / maxLag;
 		aceitoAdiante = (int) frequencia / maxAdiante;
 		dados = new byte[tamanhoBuffer];
-		
+
 		try {
 			arquivoSaida = new File(bufTemp);
 			FileOutputStream outFileStream = new FileOutputStream(arquivoSaida);
@@ -142,12 +142,12 @@ public class AudioNegocio extends Thread {
 	}
 
 	/**	Seta o tempo de sincronia */
-	public void setSyncTime(long syncTime) {
-		this.tempoSinc = syncTime;
+	public void setTempoSinc(long tempoSinc) {
+		this.tempoSinc = tempoSinc;
 	}
 
 	/** Utilizado para sincronizar o áudio */
-	public synchronized void hold() {
+	public synchronized void aguardar() {
 		try {
 			wait(6000);
 		} catch (InterruptedException ie) {
@@ -166,7 +166,7 @@ public class AudioNegocio extends Thread {
 	 * memória no momento
 	 */
 	private void preencher() throws Exception {
-		
+
 		framesLidos = bytesLidos / tamanhoEmBytes;
 		repFrames = framesPerdidos / framesLidos + 1;
 		frameBonus = framesPerdidos % framesLidos;
@@ -174,7 +174,7 @@ public class AudioNegocio extends Thread {
 		adicionados = 0;
 		intervaloLoop = framesLidos / frameBonus;
 		contBonus = frameBonus;
-		
+
 		while (0 < contBonus--) {
 			outputStream.write(dados, posFrame, tamanhoEmBytes);
 			adicionados++;
@@ -188,10 +188,10 @@ public class AudioNegocio extends Thread {
 				posFrame += tamanhoEmBytes;
 			}
 		}
-		
+
 		posiFrame = frameBonus * intervaloLoop;
 		framesRest = framesLidos - posiFrame;
-		
+
 		while (0 < framesRest--) {
 			repCont = repFrames;
 			while (0 < repCont--) {
@@ -207,13 +207,15 @@ public class AudioNegocio extends Thread {
 	 * verifica os dados disponíveis e os pega. Aguarda por
 	 * tempoSleep milisegundos e repete até o data line ser fechado.
 	 */
+	@Override
+	@SuppressWarnings("SleepWhileInLoop")
 	public void run() {
 		while (true) {
 			init();
-			BytesAdicionados = 0;
+			bytesAdicionados = 0;
 			bytesTotal = 0;
 			while (parado) {
-				hold();
+				aguardar();
 			}
 			try {
 				targetDataLine.start();
@@ -229,15 +231,14 @@ public class AudioNegocio extends Thread {
 						tempoAtual = System.currentTimeMillis();
 						bytesTotal += bytesLidos;
 						frameAtual = (long) (frequencia / velocidade) * (tempoAtual - tempoSinc) / 1000L;
-						framesPerdidos = (int) (frameAtual - targetDataLine.getLongFramePosition() - BytesAdicionados / tamanhoEmBytes);
+						framesPerdidos = (int) (frameAtual - targetDataLine.getLongFramePosition() - bytesAdicionados / tamanhoEmBytes);
 						if (!parado && sincAudio && (0 < framesPerdidos - lagAceito)) {
 							countup = contTempoAdiante;
 							if (0 < 1 - countdown--) {
 								bytesPerdidos = framesPerdidos * tamanhoEmBytes;
-								checkT2 = System.currentTimeMillis();
 								preencher();
 								bytesTotal += bytesPerdidos;
-								BytesAdicionados += bytesPerdidos;
+								bytesAdicionados += bytesPerdidos;
 								countdown = contVezesLag;
 							} else {
 								outputStream.write(dados, 0, bytesLidos);
@@ -251,11 +252,11 @@ public class AudioNegocio extends Thread {
 								if (0 <= framesLidos + framesPerdidos) {
 									outputStream.write(dados, bytesACortar, bytesLidos - bytesACortar);
 									bytesTotal -= bytesACortar;
-									BytesAdicionados -= bytesACortar;
+									bytesAdicionados -= bytesACortar;
 									countdown = contVezesLag;
 								} else {
 									bytesTotal -= bytesLidos;
-									BytesAdicionados -= bytesLidos;
+									bytesAdicionados -= bytesLidos;
 								}
 								countup = contTempoAdiante;
 							} else {
@@ -276,14 +277,16 @@ public class AudioNegocio extends Thread {
 			} catch (Exception e) {
 				System.out.println(e);
 			} finally {
-				finish();
+				finalizar();
 			}
 		}
 	}
-	public synchronized boolean setAudioFile(String fileName) {
+
+	/** Seta o arquivo de áudio */
+	public synchronized boolean setArquivoAudio(String nomeArquivo) {
 		boolean set = false;
 		try {
-			arquivoAudio = new File(fileName);
+			arquivoAudio = new File(nomeArquivo);
 			set = true;
 		} catch (Exception e) {
 			System.err.println(e);
@@ -291,21 +294,18 @@ public class AudioNegocio extends Thread {
 			return set;
 		}
 	}
-	public synchronized void finish() {
+
+	/** Finaliza o processo */
+	public synchronized void finalizar() {
 		try {
 			outputStream.close();
-			FileInputStream audioInAgain =
-					new FileInputStream(arquivoSaida);
-			long sampleBytes = arquivoSaida.length();
-			long sizeOfFrame = (long) bitsAudio * canais / 8;
-			BufferedInputStream buffAudioIn =
-					new BufferedInputStream(audioInAgain, tamanhoBufferMemoria);
-			AudioInputStream a_input =
-					new AudioInputStream(buffAudioIn,
-					formatoAudio,
-					sampleBytes / sizeOfFrame);
-			AudioSystem.write(a_input, tipoArquivo, arquivoAudio);
-			buffAudioIn.close();
+			FileInputStream fileInStream = new FileInputStream(arquivoSaida);
+			long bytesAudio = arquivoSaida.length();
+			long tamanhoDoFrame = (long) bitsAudio * canais / 8;
+			BufferedInputStream audioBufInStream = new BufferedInputStream(fileInStream, tamanhoBufferMemoria);
+			AudioInputStream audioInStream = new AudioInputStream(audioBufInStream, formatoAudio, bytesAudio / tamanhoDoFrame);
+			AudioSystem.write(audioInStream, tipoArquivo, arquivoAudio);
+			audioBufInStream.close();
 			arquivoSaida.delete();
 		} catch (Exception e) {
 			System.err.println(e);

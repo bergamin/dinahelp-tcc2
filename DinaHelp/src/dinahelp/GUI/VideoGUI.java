@@ -189,9 +189,9 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 				}
 				retangulo.setBounds(x, y, largura, altura);
 				long tempoSinc = System.currentTimeMillis();
-				video.setSyncTime(tempoSinc);
+				video.setTempoSinc(tempoSinc);
 				video.setNaoTerminado(true);
-				video.wakeUp();
+				video.acordar();
 				bFimGrava.setEnabled(true);
 			}
 
@@ -220,7 +220,7 @@ public class VideoGUI extends javax.swing.JFrame implements ActionListener {
 		video.naoTerminado = false;
 
 		while (video.gravando) {
-			video.hold();
+			video.aguardar();
 		}
 
 		video.encode();
