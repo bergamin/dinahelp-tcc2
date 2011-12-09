@@ -13,11 +13,12 @@ import java.nio.channels.FileChannel;
  */
 public class CopiaArquivos {
 
+	/** Construtor já realiza o processo de cópia */
 	public CopiaArquivos(String origem, String destino) {
-		//streams  
+		/** Streams */
 		FileInputStream orig;
 		FileOutputStream dest;
-		//canais  
+		/** Canais */
 		FileChannel fcOrigem;
 		FileChannel fcDestino;
 

@@ -214,11 +214,11 @@ public class VideoNegocio extends Thread {
 
 			JpegParaMov dumper = new JpegParaMov(argumentos);
 
-			dumper.setListaDeDados(imagens);
+			dumper.setImagens(imagens);
 			dumper.setPriority(Thread.NORM_PRIORITY);
 			dumper.setAcabou(false);
 			dumper.start();
-			dumper.waitFor();
+			dumper.aguardar();
 		} catch (Exception e) {
 		} catch (OutOfMemoryError o) {
 		}

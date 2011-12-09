@@ -2,7 +2,6 @@ package dinahelp.util;
 
 import dinahelp.GUI.InicialGUI;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTree;
@@ -24,8 +23,8 @@ public class Arvore extends JPanel {
 	protected DefaultMutableTreeNode root;
 	protected DefaultTreeModel modelo;
 	protected JTree arvore;
-	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 
+	/** Construtor */
 	public Arvore() {
 		super(new GridLayout(1, 0));
 
@@ -49,7 +48,6 @@ public class Arvore extends JPanel {
 			DefaultMutableTreeNode nodoAtual = (DefaultMutableTreeNode) (selecaoAtual.getLastPathComponent());
 			MutableTreeNode pai = (MutableTreeNode) (nodoAtual.getParent());
 			if (pai != null) {
-				TreePath caminho = arvore.getSelectionPath();
 				new File(getCaminho()).delete(); // SÓ NÃO DELETA PASTA COM ARQUIVOS DENTRO
 				modelo.removeNodeFromParent(nodoAtual);
 				return;
@@ -71,10 +69,12 @@ public class Arvore extends JPanel {
 		return addFilho(nodoPai, filho, true);
 	}
 
+	/** Adiciona um novo nodo filho abaixo do pai informado por parâmetro */
 	public DefaultMutableTreeNode addFilho(DefaultMutableTreeNode pai, Object filho) {
 		return addFilho(pai, filho, false);
 	}
 
+	/** Adiciona um novo nodo filho abaixo do pai informado por parâmetro */
 	public DefaultMutableTreeNode addFilho(DefaultMutableTreeNode pai, Object filho, boolean isVisivel) {
 		DefaultMutableTreeNode nodoFilho = new DefaultMutableTreeNode(filho);
 
@@ -90,6 +90,7 @@ public class Arvore extends JPanel {
 		return nodoFilho;
 	}
 
+	/** Retorna o caminho completo da seleção + o workspace definido inicialmente */
 	public String getCaminho() {
 		if (arvore.getSelectionPath() != null) {
 			String retorno = arvore.getSelectionPath().toString();
@@ -105,6 +106,7 @@ public class Arvore extends JPanel {
 		}
 	}
 
+	/** Método auxiliar ao getCaminho() para remover caracteres de uma String */
 	public static String removeChar(String s, char c) {
 
 		String retorno = "";
@@ -119,20 +121,13 @@ public class Arvore extends JPanel {
 
 	}
 
+	/** Inner Class necessária para implementar a árvore */
 	class MyTreeModelListener implements TreeModelListener {
 
 		@Override
 		public void treeNodesChanged(TreeModelEvent e) {
 			DefaultMutableTreeNode nodo;
 			nodo = (DefaultMutableTreeNode) (e.getTreePath().getLastPathComponent());
-
-			/*
-			 * If the event lists children, then the changed
-			 * node is the child of the node we've already
-			 * gotten.  Otherwise, the changed node and the
-			 * specified node are the same.
-			 */
-
 			int i = e.getChildIndices()[0];
 			nodo = (DefaultMutableTreeNode) (nodo.getChildAt(i));
 		}
