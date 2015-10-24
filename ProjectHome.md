@@ -1,0 +1,1 @@
+Ferramenta para o auxílio a criação de sistemas de ajuda dinâmicos.
