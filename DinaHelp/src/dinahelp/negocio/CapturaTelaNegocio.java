@@ -29,6 +29,9 @@ public class CapturaTelaNegocio {
 		} catch (AWTException ex) {
 			JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nAWTException");
 			System.exit(0);
+		} catch (IllegalArgumentException ex){
+                	JOptionPane.showMessageDialog(null, "Ocorreu um erro e a aplicação deve ser fechada\nIllegalArgumentException");
+			System.exit(0);
 		}
 	}
 }
